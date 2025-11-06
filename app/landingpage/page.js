@@ -1,6 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -52,7 +52,7 @@ export default function LandingPage() {
   ];
 
   const handleTouchStart = (e) => {
-    setTouchEndX(null); // otherwise the swipe is fired even with usual touch
+    setTouchEndX(null);
     setTouchStartX(e.touches[0].clientX);
   };
 
@@ -61,12 +61,10 @@ export default function LandingPage() {
   const handleTouchEnd = () => {
     if (!touchStartX || !touchEndX) return;
     const distance = touchStartX - touchEndX;
-    const minDistance = 50; // required min distance for swipe
+    const minDistance = 50;
     if (distance > minDistance) {
-      // swiped left -> next
       setCurrentSlide(current => (current < artworks.length - 1 ? current + 1 : 0));
     } else if (distance < -minDistance) {
-      // swiped right -> prev
       setCurrentSlide(current => (current > 0 ? current - 1 : artworks.length - 1));
     }
     setTouchStartX(null);
@@ -78,62 +76,107 @@ export default function LandingPage() {
       minHeight: '100vh', 
       background: '#001026',
       color: '#ffffff',
-      fontFamily: "'Inter', sans-serif",
+      fontFamily: "'Lato', sans-serif",
+      fontWeight: '300',
       position: 'relative',
       overflow: 'hidden'
     }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap');
+        
+        .nav-link {
+          color: #cbbd93;
+          text-decoration: none;
+          fontSize: 14px;
+          font-weight: 300;
+          letter-spacing: 0.5px;
+          transition: opacity 0.3s ease;
+          opacity: 0.8;
+        }
+        
+        .nav-link:hover {
+          opacity: 1;
+        }
+        
+        .btn-hover-effect {
+          transition: all 0.3s ease;
+        }
+        
+        .btn-hover-effect:hover {
+          transform: translateY(-1px);
+        }
+      `}</style>
 
       {/* Header */}
-      <nav className="d-flex align-items-center justify-content-between" style={{
-        background: 'rgba(203, 189, 147, 0.05)',
+      <nav className="d-flex align-items-center justify-content-between px-5" style={{
+        background: 'rgba(0, 0, 0, 0.3)',
         backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(203, 189, 147, 0.2)',
-        height: '150px'
+        borderBottom: '1px solid rgba(203, 189, 147, 0.15)',
+        height: '80px',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000
       }}>
-        <div className="d-flex align-items-center ms-4">
+        <div className="d-flex align-items-center">
           <img 
             src="/images/logo.png" 
             alt="Galerium" 
+            onClick={() => router.push('/')}
             style={{
-              height: '150px',
+              height: '1200px',
               width: '150px',
               objectFit: 'contain',
-              filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)'
+              filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)',
+              cursor: 'pointer',
+              transition: 'transform 0.3s ease'
             }}
+            onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+            onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
           />
         </div>
 
-        <div className="me-4">
+        <div className="d-flex align-items-center gap-4">
+          <a href="#gallery" className="nav-link">Gallery</a>
+          <a href="#about" className="nav-link">Artists</a>
+          <a href="#explore" className="nav-link">Explore</a>
+          <a href="#contact" className="nav-link">Connect</a>
+        </div>
+
+        <div className="d-flex align-items-center gap-2">
           <button 
             className="btn" 
             onClick={() => router.push('/login')}
             style={{ 
-              borderRadius: '6px', 
-              padding: '6px 12px',
-              border: '2px solid #cbbd93',
+              borderRadius: '4px', 
+              padding: '8px 20px',
+              border: 'none',
               color: '#cbbd93',
               backgroundColor: 'transparent',
               transition: 'all 0.3s ease',
-              hover: {
-                backgroundColor: '#cbbd93',
-                color: '#001026'
-              }
+              fontSize: '14px',
+              fontWeight: '300',
+              letterSpacing: '0.5px'
             }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(203, 189, 147, 0.1)'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
           >
             Login
           </button>
           <button 
-            className="btn ms-2" 
+            className="btn btn-hover-effect" 
             onClick={() => router.push('/signup')}
             style={{ 
-              borderRadius: '6px', 
-              padding: '6px 12px',
+              borderRadius: '4px', 
+              padding: '8px 20px',
               border: 'none',
-              fontWeight: '600',
+              fontWeight: '300',
               backgroundColor: '#bea173',
-              color: '#ffffff',
-              transition: 'all 0.3s ease'
+              color: '#001026',
+              fontSize: '14px',
+              letterSpacing: '0.5px'
             }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#cbbd93'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#bea173'}
           >
             Register
           </button>
@@ -151,15 +194,36 @@ export default function LandingPage() {
       }}>
 
         {/* Gallery Section */}
-        <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '90vh' }}>
+        <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '90vh', paddingTop: '60px' }}>
+          {/* Title Section */}
+          <div className="text-center mb-5" style={{ position: 'relative', zIndex: '1' }}>
+            <h1 className="display-4 mb-3" style={{ 
+              color: '#cbbd93',
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: '400',
+              letterSpacing: '1px',
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)'
+            }}>
+              Discover Masterpieces
+            </h1>
+            <p className="lead" style={{ 
+              color: 'rgba(203, 189, 147, 0.9)',
+              fontWeight: '300',
+              fontSize: '1.1rem',
+              marginBottom: '0'
+            }}>
+              Explore our curated collection of timeless artworks
+            </p>
+          </div>
+
           <div className="position-relative" style={{ width: '100%', maxWidth: '1200px' }}>
             {/* Art Cards Stack */}
             <div
               className="d-flex justify-content-center"
               style={{ 
                 perspective: '1000px',
-                height: '500px',
-                marginBottom: '20px'
+                height: '520px',
+                marginBottom: '30px'
               }}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
@@ -210,21 +274,25 @@ export default function LandingPage() {
                     }}>
                       <h3 style={{ 
                         color: '#cbbd93', 
-                        fontWeight: '600',
-                        fontSize: '1.2rem',
-                        marginBottom: '8px'
+                        fontWeight: '400',
+                        fontSize: '1.3rem',
+                        marginBottom: '8px',
+                        fontFamily: "'Playfair Display', serif",
+                        letterSpacing: '0.5px'
                       }}>{artwork.title}</h3>
                       <p style={{ 
                         color: '#e0c1a2', 
                         fontSize: '0.95rem',
-                        marginBottom: '8px' 
+                        marginBottom: '8px',
+                        fontWeight: '300'
                       }}>{artwork.artist}, {artwork.year}</p>
                       <p style={{ 
                         color: 'rgba(203, 189, 147, 0.8)',
                         fontStyle: 'italic',
                         fontSize: '0.9rem',
                         lineHeight: '1.5',
-                        margin: 0
+                        margin: 0,
+                        fontWeight: '300'
                       }}>
                         "{artwork.description}"
                       </p>
@@ -239,8 +307,8 @@ export default function LandingPage() {
               onClick={() => setCurrentSlide(current => (current > 0 ? current - 1 : artworks.length - 1))}
               style={{
                 position: 'absolute',
-                left: '20px',
-                top: '50%',
+                left: 'max(10px, calc(50% - 620px))',
+                top: '40%',
                 transform: 'translateY(-50%)',
                 backgroundColor: 'rgba(203, 189, 147, 0.1)',
                 border: '1px solid rgba(203, 189, 147, 0.2)',
@@ -253,8 +321,11 @@ export default function LandingPage() {
                 cursor: 'pointer',
                 color: '#cbbd93',
                 backdropFilter: 'blur(5px)',
-                zIndex: artworks.length + 1
+                zIndex: artworks.length + 1,
+                transition: 'all 0.3s ease'
               }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(203, 189, 147, 0.2)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'rgba(203, 189, 147, 0.1)'}
             >
               <i className="fas fa-chevron-left"></i>
             </button>
@@ -262,8 +333,8 @@ export default function LandingPage() {
               onClick={() => setCurrentSlide(current => (current < artworks.length - 1 ? current + 1 : 0))}
               style={{
                 position: 'absolute',
-                right: '20px',
-                top: '50%',
+                right: 'max(10px, calc(50% - 620px))',
+                top: '40%',
                 transform: 'translateY(-50%)',
                 backgroundColor: 'rgba(203, 189, 147, 0.1)',
                 border: '1px solid rgba(203, 189, 147, 0.2)',
@@ -276,34 +347,64 @@ export default function LandingPage() {
                 cursor: 'pointer',
                 color: '#cbbd93',
                 backdropFilter: 'blur(5px)',
-                zIndex: artworks.length + 1
+                zIndex: artworks.length + 1,
+                transition: 'all 0.3s ease'
               }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(203, 189, 147, 0.2)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'rgba(203, 189, 147, 0.1)'}
             >
               <i className="fas fa-chevron-right"></i>
             </button>
+
+            {/* Slide Indicators */}
+            <div className="d-flex justify-content-center gap-2 mt-4">
+              {artworks.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  style={{
+                    width: currentSlide === index ? '32px' : '8px',
+                    height: '8px',
+                    borderRadius: '4px',
+                    border: 'none',
+                    backgroundColor: currentSlide === index ? '#bea173' : 'rgba(203, 189, 147, 0.3)',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    padding: 0
+                  }}
+                  onMouseEnter={(e) => {
+                    if (currentSlide !== index) {
+                      e.target.style.backgroundColor = 'rgba(203, 189, 147, 0.5)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (currentSlide !== index) {
+                      e.target.style.backgroundColor = 'rgba(203, 189, 147, 0.3)';
+                    }
+                  }}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Artwork Info - Moved outside the gallery container */}
-          <div className="text-center" style={{ marginTop: '20px', position: 'relative', zIndex: '1' }}>
-            <h1 className="display-4 mb-3" style={{ color: '#cbbd93' }}>
-              Discover Masterpieces
-            </h1>
-            <p className="lead" style={{ color: 'rgba(203, 189, 147, 0.9)' }}>
-              Explore our curated collection of timeless artworks
-            </p>
+          {/* CTA Button */}
+          <div className="text-center mt-5">
             <button 
-              className="btn btn-lg px-4 mt-3"
+              className="btn btn-lg px-4 btn-hover-effect"
               onClick={() => router.push('/signup')}
               style={{ 
                 borderRadius: '8px',
                 border: 'none',
-                padding: '12px 24px',
-                fontWeight: '600',
+                padding: '12px 32px',
+                fontWeight: '300',
                 backgroundColor: '#bea173',
                 color: '#ffffff',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 15px rgba(204, 119, 34, 0.3)'
+                letterSpacing: '0.5px',
+                boxShadow: '0 4px 15px rgba(204, 119, 34, 0.3)',
+                fontSize: '1.05rem'
               }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#cbbd93'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#bea173'}
             >
               Start Exploring
             </button>
@@ -324,5 +425,4 @@ export default function LandingPage() {
       }}></div>
     </div>
   );
-    
 }
