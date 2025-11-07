@@ -136,10 +136,11 @@ export default function LandingPage() {
         </div>
 
         <div className="d-flex align-items-center gap-4">
-          <a href="#gallery" className="nav-link">Gallery</a>
-          <a href="#about" className="nav-link">Artists</a>
-          <a href="#explore" className="nav-link">Explore</a>
-          <a href="#contact" className="nav-link">Connect</a>
+          <a href="#home" className="nav-link">Home</a>
+          <a href="#artworks" className="nav-link">Artworks</a>
+          <a href="#artists" className="nav-link">Artists</a>
+          <a href="#about" className="nav-link">About</a>
+  
         </div>
 
         <div className="d-flex align-items-center gap-2">
@@ -178,7 +179,7 @@ export default function LandingPage() {
             onMouseEnter={(e) => e.target.style.backgroundColor = '#cbbd93'}
             onMouseLeave={(e) => e.target.style.backgroundColor = '#bea173'}
           >
-            Register
+            Sign Up
           </button>
         </div>
       </nav>
