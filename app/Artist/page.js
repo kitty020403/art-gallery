@@ -6,7 +6,7 @@ const ARTISTS = {
   'ismail-bahri': {
     name: 'Ismail Bahri',
     role: 'Visual Artist',
-    image: '/images/artist-ismail.jpg',
+    image: '/images/artist-ismail.jpg', // place image in public/images/
     paragraphs: [
       "Born in 1978 in Tunis, studied at the Institut Supérieur des Beaux-Arts de Tunis and Le Fresnoy - Studio National des Arts Contemporains in France.",
       "His work has been featured in numerous international exhibitions, including the Venice Biennale, Sharjah Biennial and Centre Pompidou. He is known for a minimalist approach and a poetic engagement with materials and time.",
@@ -20,7 +20,7 @@ const ARTISTS = {
   }
 };
 
-export default function ArtistsPage({ params }) {
+export default function ArtistPage({ params }) {
   const router = useRouter();
   const slug = params?.slug ?? 'ismail-bahri';
   const artist = ARTISTS[slug] ?? ARTISTS['ismail-bahri'];
@@ -66,9 +66,9 @@ export default function ArtistsPage({ params }) {
       </main>
 
       <footer style={styles.footer}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#9aa3ab' }}>
+        <div style={{maxWidth:1100, margin:'0 auto', padding:'16px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', color:'#9aa3ab'}}>
           <small>© {new Date().getFullYear()} {artist.name}. All rights reserved.</small>
-          <div style={{ display: 'flex', gap: 16 }}>
+          <div style={{display:'flex', gap:16}}>
             <a href="/privacy" style={styles.footerLink}>Privacy Policy</a>
             <a href="/terms" style={styles.footerLink}>Terms of Use</a>
           </div>
