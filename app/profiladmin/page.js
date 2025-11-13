@@ -1,239 +1,849 @@
 'use client';
+
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function ProfilAdmin() {
+export default function AdminPanel() {
   const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [activeTab, setActiveTab] = useState('artworks');
+  const [artworks, setArtworks] = useState([]);
+  const [artists, setArtists] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editingItem, setEditingItem] = useState(null);
+  const [formData, setFormData] = useState({});
+  const [lastUpdated, setLastUpdated] = useState(null);
 
-  // Données de l'administrateur
-  const adminData = {
-    nomComplet: "Malek Belcheikh",
-    email: "admin@entreprise.tn",
-    telephone: "+216 12 345 678",
-    role: "Administrateur Principal",
-    dateInscription: "15/03/2022",
-    derniereConnexion: "Aujourd'hui à 10:30",
-    ticketsTraites: 247,
-    avatar: "https://randomuser.me/api/portraits/women/63.jpg"
+  useEffect(() => {
+    checkAuth();
+    fetchArtworks();
+    fetchArtists();
+    fetchUsers();
+  }, []);
+
+  const checkAuth = async () => {
+    try {
+      console.log('Checking auth...');
+      const res = await fetch('/api/auth/me');
+      console.log('Auth response status:', res.status);
+      
+      if (!res.ok) {
+        console.log('Not authenticated, redirecting to login');
+        router.push('/login');
+        return;
+      }
+      const response = await res.json();
+      console.log('Auth response:', response);
+      
+      if (!response.success || !response.data) {
+        console.log('Invalid response, redirecting to login');
+        router.push('/login');
+        return;
+      }
+      
+      const userData = response.data;
+      console.log('User data:', userData);
+      
+      if (userData.role !== 'admin') {
+        console.log('User is not admin, redirecting to home');
+        router.push('/');
+        return;
+      }
+      console.log('User is admin, setting user state');
+      setUser(userData);
+    } catch (error) {
+      console.error('Auth error:', error);
+      router.push('/login');
+    }
   };
 
+  const fetchArtworks = async (opts = {}) => {
+    try {
+      console.log('Fetching artworks...');
+      const res = await fetch(`/api/artworks?status=all`);
+      console.log('Artworks response status:', res.status);
+      const response = await res.json();
+      console.log('Artworks response:', response);
+      
+      // L'API retourne { success: true, data: [...] }
+      const data = response.success && response.data ? response.data : [];
+      console.log('Artworks array:', data);
+      console.log('Is array?', Array.isArray(data));
+      setArtworks(Array.isArray(data) ? data : []);
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('Error fetching artworks:', error);
+      setArtworks([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchArtists = async () => {
+    try {
+  const res = await fetch('/api/artists');
+      const response = await res.json();
+      const data = response.success && response.data ? response.data : [];
+      setArtists(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error fetching artists:', error);
+      setArtists([]);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch('/api/users');
+      const response = await res.json();
+      const data = response.success && response.data ? response.data : [];
+      setUsers(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      setUsers([]);
+    }
+  };
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    localStorage.removeItem('user');
+    router.push('/login');
+  };
+
+  const handleSubmitArtwork = async (e) => {
+    e.preventDefault();
+    try {
+      const method = editingItem ? 'PUT' : 'POST';
+      const url = editingItem ? `/api/artworks/${editingItem._id}` : '/api/artworks';
+      
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      if (res.ok) {
+        setEditingItem(null);
+        setFormData({});
+        fetchArtworks();
+      }
+    } catch (error) {
+      console.error('Error saving artwork:', error);
+    }
+  };
+
+  const handleSubmitArtist = async (e) => {
+    e.preventDefault();
+    try {
+      const method = editingItem ? 'PUT' : 'POST';
+      const url = editingItem ? `/api/artists/${editingItem._id}` : '/api/artists';
+      
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      if (res.ok) {
+        setEditingItem(null);
+        setFormData({});
+        fetchArtists();
+      }
+    } catch (error) {
+      console.error('Error saving artist:', error);
+    }
+  };
+
+  const handleDelete = async (type, id) => {
+    if (!confirm('Are you sure you want to delete this item?')) return;
+    
+    try {
+      const url = type === 'artwork' ? `/api/artworks/${id}` : `/api/artists/${id}`;
+      const res = await fetch(url, { method: 'DELETE', credentials: 'include' });
+      if (!res.ok) {
+        let errText = 'Delete failed';
+        try { const j = await res.json(); if (j && j.error) errText = j.error; } catch {}
+        alert(errText);
+        return;
+      }
+      
+      if (type === 'artwork') fetchArtworks();
+      else fetchArtists();
+    } catch (error) {
+      console.error('Error deleting:', error);
+    }
+  };
+
+  const startEdit = (item) => {
+    setEditingItem(item);
+    setFormData(item);
+  };
+
+  const cancelEdit = () => {
+    setEditingItem(null);
+    setFormData({});
+  };
+
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#001026' }}>
+        <div style={{ color: '#cbbd93', fontSize: '1.5rem' }}>Loading...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="d-flex min-vh-100" style={{
-      background: 'linear-gradient(135deg, #000f3f 0%, #001a66 100%)',
-      backdropFilter: 'blur(2px)'
-    }}>
-      {/* Barre latérale identique */}
-      <aside style={{
-        width: "260px",
-        background: "rgba(255, 255, 255, 0.85)",
-        backdropFilter: "blur(10px)",
-        borderRight: "1px solid rgba(118, 75, 162, 0.1)",
-        boxShadow: "2px 0 15px rgba(0, 0, 0, 0.05)"
-      }}>
-        <div className="p-4 border-bottom d-flex align-items-center">
-          <i className="bi bi-layers fs-3 text-primary me-2"></i>
-          <span className="fw-bold fs-4" style={{ color: '#000f3f' }}>Admin</span>
+    <div style={{ minHeight: '100vh', backgroundColor: '#001026', paddingTop: '80px', paddingBottom: '40px' }}>
+      <div className="container">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', gap: '20px', flexWrap: 'wrap' }}>
+          <h1 style={{ color: '#cbbd93', fontSize: '2.5rem', marginBottom: 0 }}>Admin Panel</h1>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => { setLoading(true); fetchArtworks(); }}
+                style={{
+                  backgroundColor: 'transparent',
+                  color: '#cbbd93',
+                  border: '1px dashed #cbbd93',
+                  padding: '6px 14px',
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem'
+                }}
+              >Refresh</button>
+            </div>
+            <span style={{ color: 'rgba(203,189,147,0.6)', fontSize: '0.7rem', textAlign: 'right' }}>
+              {lastUpdated ? `Last updated: ${lastUpdated.toLocaleTimeString()}` : 'Not loaded yet'}
+            </span>
+          </div>
+          <button 
+            onClick={handleLogout}
+            style={{ 
+              backgroundColor: '#cbbd93', 
+              color: '#001026', 
+              border: 'none', 
+              padding: '10px 20px', 
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            Logout
+          </button>
         </div>
-        <nav>
-          <div className="mt-3">
-            <div className="text-muted text-uppercase px-4 mb-2 small">Navigation</div>
-            <ul className="nav flex-column">
-              <li className="nav-item">
-                <button className="nav-link px-4 py-2 d-flex align-items-center rounded text-start w-100 border-0"
-                  style={{ color: '#000f3f' }}
-                  onClick={() => router.push('/admin')}>
-                  <i className="bi bi-speedometer2 me-2"></i>Tableau de bord
-                </button>
-              </li>
-              <li className="nav-item">
-                <button className="nav-link px-4 py-2 d-flex align-items-center rounded text-start w-100 border-0"
-                  style={{ color: '#000f3f', backgroundColor: 'rgba(0, 15, 63, 0.1)' }}>
-                  <i className="bi bi-person-gear me-2"></i>Mon Profil
-                </button>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </aside>
 
-      {/* Contenu principal */}
-      <div className="flex-grow-1 d-flex flex-column">
-        {/* Barre supérieure identique */}
-        <header className="d-flex align-items-center justify-content-between px-4 py-3 border-bottom bg-white">
-          <div className="d-flex align-items-center">
-              <h5 className="mb-0 fw-bold" style={{ color: '#000f3f' }}>
-              <i className="bi bi-person-gear me-2"></i>
-              Profil Administrateur
-            </h5>
-          </div>
-          <div className="d-flex align-items-center gap-3">
-            <i className="bi bi-bell fs-5" style={{ color: '#000f3f' }}></i>
-            <div className="d-flex align-items-center">
-              <span className="me-2 fw-bold" style={{ color: '#000f3f' }}>{adminData.nomComplet}</span>
-              <img src={adminData.avatar} alt="Admin" 
-                className="rounded-circle border" width="36" height="36"
-                style={{ borderColor: 'rgba(118, 75, 162, 0.3)' }} />
-            </div>
-          </div>
-        </header>
+        {/* Tabs */}
+        <div style={{ marginBottom: '30px', borderBottom: '1px solid rgba(203, 189, 147, 0.3)' }}>
+          <button
+            onClick={() => setActiveTab('artworks')}
+            style={{
+              backgroundColor: 'transparent',
+              color: activeTab === 'artworks' ? '#cbbd93' : 'rgba(203, 189, 147, 0.6)',
+              border: 'none',
+              padding: '10px 30px',
+              cursor: 'pointer',
+              fontSize: '1.1rem',
+              borderBottom: activeTab === 'artworks' ? '2px solid #cbbd93' : 'none'
+            }}
+          >
+            Artworks
+          </button>
+          <button
+            onClick={() => setActiveTab('artists')}
+            style={{
+              backgroundColor: 'transparent',
+              color: activeTab === 'artists' ? '#cbbd93' : 'rgba(203, 189, 147, 0.6)',
+              border: 'none',
+              padding: '10px 30px',
+              cursor: 'pointer',
+              fontSize: '1.1rem',
+              borderBottom: activeTab === 'artists' ? '2px solid #cbbd93' : 'none'
+            }}
+          >
+            Artists
+          </button>
+          <button
+            onClick={() => setActiveTab('users')}
+            style={{
+              backgroundColor: 'transparent',
+              color: activeTab === 'users' ? '#cbbd93' : 'rgba(203, 189, 147, 0.6)',
+              border: 'none',
+              padding: '10px 30px',
+              cursor: 'pointer',
+              fontSize: '1.1rem',
+              borderBottom: activeTab === 'users' ? '2px solid #cbbd93' : 'none'
+            }}
+          >
+            Users
+          </button>
+        </div>
 
-        {/* Section Profil */}
-        <main className="p-4 flex-grow-1">
-          <div className="row">
-            {/* Colonne de gauche - Photo et stats */}
-            <div className="col-md-4 mb-4">
-              <div className="card shadow-sm border-0 h-100">
-                <div className="card-body text-center">
-                  <img src={adminData.avatar} alt="Admin" 
-                    className="rounded-circle mb-3 border" width="120" height="120"
-                    style={{ borderColor: 'rgba(118, 75, 162, 0.3)', objectFit: 'cover' }} />
-                  
-                  <h4 style={{ color: '#000f3f' }}>{adminData.nomComplet}</h4>
-                  <span className="badge bg-danger">{adminData.role}</span>
-
-                  <div className="mt-4">
-                    <div className="d-flex justify-content-between py-2 border-bottom">
-                      <span className="text-muted">Membre depuis</span>
-                      <span>{adminData.dateInscription}</span>
-                    </div>
-                    <div className="d-flex justify-content-between py-2 border-bottom">
-                      <span className="text-muted">Dernière connexion</span>
-                      <span>{adminData.derniereConnexion}</span>
-                    </div>
-                    <div className="d-flex justify-content-between py-2 border-bottom">
-                      <span className="text-muted">Tickets traités</span>
-                      <span className="fw-bold" style={{ color: '#000f3f' }}>{adminData.ticketsTraites}</span>
-                    </div>
+        {/* Artworks Tab */}
+        {activeTab === 'artworks' && (
+          <div>
+            {/* Add/Edit Form */}
+            <div style={{ 
+              backgroundColor: 'rgba(203, 189, 147, 0.05)', 
+              padding: '30px', 
+              borderRadius: '10px', 
+              marginBottom: '30px',
+              border: '1px solid rgba(203, 189, 147, 0.2)'
+            }}>
+              <h3 style={{ color: '#cbbd93', marginBottom: '20px' }}>
+                {editingItem ? 'Edit Artwork' : 'Add New Artwork'}
+              </h3>
+              <form onSubmit={handleSubmitArtwork}>
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      placeholder="Title"
+                      value={formData.title || ''}
+                      onChange={(e) => setFormData({...formData, title: e.target.value})}
+                      required
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
                   </div>
-
-                  <button className="btn btn-sm mt-3 w-100" 
-                    style={{ 
-                      backgroundColor: 'rgba(220, 53, 69, 0.1)',
-                      color: '#dc3545'
-                    }}>
-                    <i className="bi bi-trash me-2"></i> Supprimer le compte
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Colonne de droite - Formulaire */}
-            <div className="col-md-8">
-              <div className="card shadow-sm border-0">
-                <div className="card-header bg-white d-flex justify-content-between align-items-center">
-                  <h6 className="mb-0 fw-bold" style={{ color: '#000f3f' }}>
-                    <i className="bi bi-pencil-square me-2"></i>
-                    Modifier le profil
-                  </h6>
-                </div>
-                <div className="card-body">
-                  <form>
-                    <div className="row mb-3">
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label fw-bold" style={{ color: '#000f3f' }}>Nom complet</label>
-                        <input type="text" className="form-control" 
-                          defaultValue={adminData.nomComplet}
-                          style={{ borderColor: 'rgba(118, 75, 162, 0.3)' }} />
-                      </div>
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label fw-bold" style={{ color: '#6a0dad' }}>Email</label>
-                        <input type="email" className="form-control" 
-                          defaultValue={adminData.email}
-                          style={{ borderColor: 'rgba(118, 75, 162, 0.3)' }} />
-                      </div>
-                    </div>
-
-                    <div className="row mb-3">
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label fw-bold" style={{ color: '#6a0dad' }}>Téléphone</label>
-                        <input type="tel" className="form-control" 
-                          defaultValue={adminData.telephone}
-                          style={{ borderColor: 'rgba(118, 75, 162, 0.3)' }} />
-                      </div>
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label fw-bold" style={{ color: '#6a0dad' }}>Photo de profil</label>
-                        <input type="file" className="form-control" 
-                          style={{ borderColor: 'rgba(118, 75, 162, 0.3)' }} />
-                      </div>
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="form-label fw-bold" style={{ color: '#6a0dad' }}>À propos</label>
-                      <textarea className="form-control" rows="3"
-                        style={{ borderColor: 'rgba(118, 75, 162, 0.3)' }}
-                        placeholder="Décrivez votre rôle..."></textarea>
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="form-label fw-bold" style={{ color: '#6a0dad' }}>Changer le mot de passe</label>
-                      <input type="password" className="form-control mb-2" 
-                        placeholder="Nouveau mot de passe"
-                        style={{ borderColor: 'rgba(118, 75, 162, 0.3)' }} />
-                      <input type="password" className="form-control" 
-                        placeholder="Confirmer le mot de passe"
-                        style={{ borderColor: 'rgba(118, 75, 162, 0.3)' }} />
-                    </div>
-
-                    <div className="d-flex justify-content-end mt-4">
-                      <button type="button" className="btn btn-light me-2"
-                        style={{ color: '#6a0dad', borderColor: 'rgba(118, 75, 162, 0.3)' }}>
-                        Annuler
-                      </button>
-                      <button type="submit" className="btn"
-                        style={{ 
-                          background: 'linear-gradient(135deg, #000f3f 0%, #001a66 100%)',
-                          color: 'white'
-                        }}>
-                        Enregistrer les modifications
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-
-              {/* Section Sécurité */}
-              <div className="card shadow-sm border-0 mt-4">
-                <div className="card-header bg-white d-flex justify-content-between align-items-center">
-                  <h6 className="mb-0 fw-bold" style={{ color: '#000f3f' }}>
-                    <i className="bi bi-shield-lock me-2"></i>
-                    Sécurité du compte
-                  </h6>
-                </div>
-                <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                      <h6 className="mb-1">Authentification à deux facteurs</h6>
-                      <small className="text-muted">Améliorez la sécurité de votre compte</small>
-                    </div>
-                    <div className="form-check form-switch">
-                      <input className="form-check-input" type="checkbox" 
-                        style={{ backgroundColor: '#000f3f', borderColor: '#000f3f' }} />
-                    </div>
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      placeholder="Artist"
+                      value={formData.artist || ''}
+                      onChange={(e) => setFormData({...formData, artist: e.target.value})}
+                      required
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
                   </div>
-
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                      <h6 className="mb-1">Sessions actives</h6>
-                      <small className="text-muted">2 appareils connectés</small>
-                    </div>
-                    <button className="btn btn-sm" 
-                      style={{ color: '#000f3f', backgroundColor: 'rgba(0, 15, 63, 0.1)' }}>
-                      Voir tout
+                  <div className="col-md-4">
+                    <input
+                      type="number"
+                      placeholder="Year"
+                      value={formData.year || ''}
+                      onChange={(e) => setFormData({...formData, year: e.target.value})}
+                      required
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <input
+                      type="text"
+                      placeholder="Period"
+                      value={formData.period || ''}
+                      onChange={(e) => setFormData({...formData, period: e.target.value})}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <input
+                      type="number"
+                      placeholder="Price"
+                      value={formData.price || ''}
+                      onChange={(e) => setFormData({...formData, price: e.target.value})}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <input
+                      type="text"
+                      placeholder="Image URL"
+                      value={formData.image || ''}
+                      onChange={(e) => setFormData({...formData, image: e.target.value})}
+                      required
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <textarea
+                      placeholder="Description"
+                      value={formData.description || ''}
+                      onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      rows={3}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <label style={{ color: '#cbbd93', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <input
+                        type="checkbox"
+                        checked={formData.featured || false}
+                        onChange={(e) => setFormData({...formData, featured: e.target.checked})}
+                      />
+                      Featured
+                    </label>
+                  </div>
+                  <div className="col-12" style={{ display: 'flex', gap: '10px' }}>
+                    <button 
+                      type="submit"
+                      style={{
+                        backgroundColor: '#cbbd93',
+                        color: '#001026',
+                        border: 'none',
+                        padding: '10px 30px',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      {editingItem ? 'Update' : 'Add'} Artwork
                     </button>
+                    {editingItem && (
+                      <button 
+                        type="button"
+                        onClick={cancelEdit}
+                        style={{
+                          backgroundColor: 'transparent',
+                          color: '#cbbd93',
+                          border: '1px solid #cbbd93',
+                          padding: '10px 30px',
+                          borderRadius: '5px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    )}
                   </div>
-
-                  <button className="btn btn-sm w-100 mt-2"
-                    style={{ 
-                      color: '#dc3545',
-                      backgroundColor: 'rgba(220, 53, 69, 0.1)'
-                    }}>
-                    <i className="bi bi-box-arrow-right me-2"></i>
-                    Déconnexion de tous les appareils
-                  </button>
                 </div>
-              </div>
+              </form>
+            </div>
+
+            {/* Artworks List with status/moderation */}
+            <div className="row g-4">
+              {artworks && artworks.length > 0 ? 
+                artworks.map(artwork => (
+                  <div key={artwork._id} className="col-md-6 col-lg-4">
+                    <div style={{
+                      backgroundColor: 'rgba(203, 189, 147, 0.05)',
+                      border: '1px solid rgba(203, 189, 147, 0.2)',
+                      borderRadius: '10px',
+                      overflow: 'hidden'
+                    }}>
+                      <img 
+                        src={artwork.image} 
+                        alt={artwork.title}
+                        style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                      />
+                      <div style={{ padding: '15px' }}>
+                        <h5 style={{ color: '#cbbd93', marginBottom: '5px' }}>{artwork.title}</h5>
+                        <p style={{ color: 'rgba(203, 189, 147, 0.7)', marginBottom: '10px', fontSize: '0.9rem' }}>
+                          {artwork.artist} - {artwork.year}
+                        </p>
+                        {artwork.submittedBy && (
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 8 }}>
+                            <span style={{ fontSize: 12, color: 'rgba(203,189,147,0.8)' }}>By: {artwork.submittedBy?.name || artwork.submittedBy?.email || 'user'}</span>
+                          </div>
+                        )}
+                        {/* Status and rejection reason hidden */}
+                        {/* Action buttons temporarily removed */}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              :
+                <div className="col-12">
+                  <p style={{ color: '#cbbd93', textAlign: 'center', padding: '20px' }}>
+                    No artworks yet. Add your first artwork above!
+                  </p>
+                </div>
+              }
             </div>
           </div>
-        </main>
+        )}
+
+        {/* Artists Tab */}
+        {activeTab === 'artists' && (
+          <div>
+            {/* Add/Edit Form */}
+            <div style={{ 
+              backgroundColor: 'rgba(203, 189, 147, 0.05)', 
+              padding: '30px', 
+              borderRadius: '10px', 
+              marginBottom: '30px',
+              border: '1px solid rgba(203, 189, 147, 0.2)'
+            }}>
+              <h3 style={{ color: '#cbbd93', marginBottom: '20px' }}>
+                {editingItem ? 'Edit Artist' : 'Add New Artist'}
+              </h3>
+              <form onSubmit={handleSubmitArtist}>
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      value={formData.name || ''}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      required
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      placeholder="Period"
+                      value={formData.period || ''}
+                      onChange={(e) => setFormData({...formData, period: e.target.value})}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      placeholder="Years (e.g., 1853-1890)"
+                      value={formData.years || ''}
+                      onChange={(e) => setFormData({...formData, years: e.target.value})}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      placeholder="Country"
+                      value={formData.country || ''}
+                      onChange={(e) => setFormData({...formData, country: e.target.value})}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <input
+                      type="text"
+                      placeholder="Image URL"
+                      value={formData.image || ''}
+                      onChange={(e) => setFormData({...formData, image: e.target.value})}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <textarea
+                      placeholder="Bio"
+                      value={formData.bio || ''}
+                      onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                      rows={4}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
+                        border: '1px solid rgba(203, 189, 147, 0.3)',
+                        borderRadius: '5px',
+                        color: '#cbbd93'
+                      }}
+                    />
+                  </div>
+                  <div className="col-12" style={{ display: 'flex', gap: '10px' }}>
+                    <button 
+                      type="submit"
+                      style={{
+                        backgroundColor: '#cbbd93',
+                        color: '#001026',
+                        border: 'none',
+                        padding: '10px 30px',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      {editingItem ? 'Update' : 'Add'} Artist
+                    </button>
+                    {editingItem && (
+                      <button 
+                        type="button"
+                        onClick={cancelEdit}
+                        style={{
+                          backgroundColor: 'transparent',
+                          color: '#cbbd93',
+                          border: '1px solid #cbbd93',
+                          padding: '10px 30px',
+                          borderRadius: '5px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            {/* Artists List */}
+            <div className="row g-4">
+              {artists && artists.length > 0 ?
+                artists.map(artist => (
+                  <div key={artist._id} className="col-md-6 col-lg-4">
+                    <div style={{
+                      backgroundColor: 'rgba(203, 189, 147, 0.05)',
+                      border: '1px solid rgba(203, 189, 147, 0.2)',
+                      borderRadius: '10px',
+                      padding: '20px'
+                    }}>
+                      <h5 style={{ color: '#cbbd93', marginBottom: '10px' }}>{artist.name}</h5>
+                      <p style={{ color: 'rgba(203, 189, 147, 0.7)', marginBottom: '5px', fontSize: '0.9rem' }}>
+                        {artist.period && `${artist.period} | `}{artist.years}
+                      </p>
+                      <p style={{ color: 'rgba(203, 189, 147, 0.7)', marginBottom: '15px', fontSize: '0.9rem' }}>
+                        {artist.country}
+                      </p>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button
+                          onClick={() => startEdit(artist)}
+                          style={{
+                            flex: 1,
+                            backgroundColor: '#cbbd93',
+                            color: '#001026',
+                            border: 'none',
+                            padding: '8px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '0.9rem'
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete('artist', artist._id)}
+                          style={{
+                            flex: 1,
+                            backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                            color: 'white',
+                            border: 'none',
+                            padding: '8px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '0.9rem'
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              :
+                <div className="col-12">
+                  <p style={{ color: '#cbbd93', textAlign: 'center', padding: '20px' }}>
+                    No artists yet. Add your first artist above!
+                  </p>
+                </div>
+              }
+            </div>
+          </div>
+        )}
+
+        {/* Users Tab */}
+        {activeTab === 'users' && (
+          <div>
+            <h3 style={{ color: '#cbbd93', marginBottom: '20px' }}>User Management</h3>
+            <p style={{ color: 'rgba(203, 189, 147, 0.8)', marginBottom: '30px' }}>
+              Promote users to artist role to allow them to submit artworks.
+            </p>
+
+            <div className="row g-4">
+              {users && users.length > 0 ?
+                users.map(u => (
+                  <div key={u._id} className="col-md-6 col-lg-4">
+                    <div style={{
+                      backgroundColor: 'rgba(203, 189, 147, 0.05)',
+                      border: '1px solid rgba(203, 189, 147, 0.2)',
+                      borderRadius: '10px',
+                      padding: '20px'
+                    }}>
+                      <h5 style={{ color: '#cbbd93', marginBottom: '5px' }}>{u.name}</h5>
+                      <p style={{ color: 'rgba(203, 189, 147, 0.7)', marginBottom: '5px', fontSize: '0.9rem' }}>
+                        {u.email}
+                      </p>
+                      <div style={{ 
+                        display: 'inline-block',
+                        padding: '4px 12px',
+                        borderRadius: '12px',
+                        fontSize: '0.85rem',
+                        fontWeight: 600,
+                        marginTop: '8px',
+                        marginBottom: '15px',
+                        backgroundColor: u.role === 'admin' ? 'rgba(220,53,69,0.2)' : u.role === 'artist' ? 'rgba(40,167,69,0.2)' : 'rgba(108,117,125,0.2)',
+                        color: u.role === 'admin' ? '#dc3545' : u.role === 'artist' ? '#28a745' : '#6c757d'
+                      }}>
+                        {u.role.toUpperCase()}
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                        {u.role !== 'artist' && u.role !== 'admin' && (
+                          <button
+                            onClick={async () => {
+                              try {
+                                const res = await fetch(`/api/users/${u._id}`, {
+                                  method: 'PUT',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  credentials: 'include',
+                                  body: JSON.stringify({ role: 'artist' })
+                                });
+                                if (res.ok) {
+                                  fetchUsers();
+                                  alert(`${u.name} promoted to artist!`);
+                                } else {
+                                  const data = await res.json();
+                                  alert(data.error || 'Failed to promote user');
+                                }
+                              } catch (e) {
+                                alert('Network error');
+                              }
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: 'rgba(40,167,69,0.8)',
+                              color: 'white',
+                              border: 'none',
+                              padding: '8px',
+                              borderRadius: '5px',
+                              cursor: 'pointer',
+                              fontSize: '0.9rem'
+                            }}
+                          >
+                            Make Artist
+                          </button>
+                        )}
+                        {u.role === 'artist' && (
+                          <button
+                            onClick={async () => {
+                              try {
+                                const res = await fetch(`/api/users/${u._id}`, {
+                                  method: 'PUT',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  credentials: 'include',
+                                  body: JSON.stringify({ role: 'user' })
+                                });
+                                if (res.ok) {
+                                  fetchUsers();
+                                  alert(`${u.name} demoted to user`);
+                                } else {
+                                  const data = await res.json();
+                                  alert(data.error || 'Failed to demote user');
+                                }
+                              } catch (e) {
+                                alert('Network error');
+                              }
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: 'rgba(108,117,125,0.8)',
+                              color: 'white',
+                              border: 'none',
+                              padding: '8px',
+                              borderRadius: '5px',
+                              cursor: 'pointer',
+                              fontSize: '0.9rem'
+                            }}
+                          >
+                            Remove Artist
+                          </button>
+                        )}
+                        {u.role === 'admin' && (
+                          <span style={{ 
+                            flex: 1, 
+                            textAlign: 'center', 
+                            color: 'rgba(203, 189, 147, 0.6)', 
+                            fontSize: '0.85rem',
+                            padding: '8px'
+                          }}>
+                            Administrator
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              :
+                <div className="col-12">
+                  <p style={{ color: '#cbbd93', textAlign: 'center', padding: '20px' }}>
+                    No users found.
+                  </p>
+                </div>
+              }
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

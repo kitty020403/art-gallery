@@ -13,7 +13,7 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
@@ -23,18 +23,40 @@ export default function SignInPage() {
       setIsLoading(false);
       return;
     }
- else if (username === 'admin' && password === 'admin') {
-      // Redirect to admin page after 1.5 seconds
-      setTimeout(() => {
-        router.push('/admin');
-      }, 1500);
-    } else {
-      // Redirect to user page for all other cases
-      setTimeout(() => {
-        router.push('/user');
-      }, 1500);
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: username, password }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        // Store user data in localStorage
+        localStorage.setItem('user', JSON.stringify(data.data.user));
+        
+        console.log('User role:', data.data.user.role);
+        console.log('Full user data:', data.data.user);
+        
+        // Redirect based on role
+        if (data.data.user.role === 'admin') {
+          console.log('Redirecting to admin panel');
+          // Use window.location for a full page redirect to ensure cookies are set
+          window.location.href = '/profiladmin';
+        } else {
+          console.log('Redirecting to catalog');
+          window.location.href = '/catalog';
+        }
+      } else {
+        setError(data.error || 'Login failed');
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+      setIsLoading(false);
     }
-    
   };
 
   return (
@@ -135,7 +157,7 @@ export default function SignInPage() {
 
               <div className="text-center mt-4">
                 <p className="text-muted">
-                  Don't have an account?{' '}
+                  Don&apos;t have an account?{' '}
                   <a 
                     href="/signup" 
                     className="text-decoration-none fw-bold"

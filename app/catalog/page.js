@@ -5,24 +5,97 @@ import { useState, useEffect } from 'react';
 export default function CatalogPage() {
   const router = useRouter();
   const [selected, setSelected] = useState(null);
+  const [artworks, setArtworks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [interactions, setInteractions] = useState({});
+  const [stats, setStats] = useState({});
 
-  const artworks = [
-    { id: 6, title: 'The Starry Night', artist: 'Vincent van Gogh', year: '1889', image: '/images/6.jpg', description: 'I look at the stars and with all my being feel that I am a part of these stars.' },
-    { id: 7, title: 'Water Lilies', artist: 'Claude Monet', year: '1919', image: '/images/7.jpg', description: 'Every day I discover more and more beautiful things.' },
-    { id: 8, title: 'The Persistence of Memory', artist: 'Salvador Dalí', year: '1931', image: '/images/8.jpg', description: 'Intelligence without ambition is a bird without wings.' },
-    { id: 9, title: 'Girl with a Pearl Earring', artist: 'Johannes Vermeer', year: '1665', image: '/images/9.jpg', description: 'A quiet portrait with a luminous pearl.' },
-    { id: 10, title: 'The Kiss', artist: 'Gustav Klimt', year: '1908', image: '/images/10.jpg', description: 'Love at first golden sight, adorned with patterns of devotion.' },
-    { id: 11, title: 'The Birth of Venus', artist: 'Sandro Botticelli', year: '1485', image: '/images/11.jpg', description: 'Venus emerges from the sea foam, a symbol of divine beauty and love.' },
-    { id: 12, title: 'The Scream', artist: 'Edvard Munch', year: '1893', image: '/images/12.jpg', description: 'Nature screams through us, expressing the anxiety of existence.' },
-    { id: 13, title: 'The Night Café', artist: 'Vincent van Gogh', year: '1888', image: '/images/13.jpg', description: 'A place where one can ruin oneself, go mad, or commit a crime.' },
-    { id: 14, title: 'Impression, Sunrise', artist: 'Claude Monet', year: '1872', image: '/images/14.jpg', description: 'The dawn breaks through the mist, giving birth to impressionism.' },
-    { id: 15, title: 'The Dream', artist: 'Pablo Picasso', year: '1932', image: '/images/15.jpg', description: 'Dreams speak in shapes and colors that defy reality.' },
-    { id: 16, title: 'The Son of Man', artist: 'René Magritte', year: '1964', image: '/images/16.jpg', description: 'Everything we see hides another thing we want to see.' },
-    { id: 17, title: 'The Great Wave off Kanagawa', artist: 'Hokusai', year: '1829', image: '/images/17.jpg', description: 'A mighty wave threatens three boats while Mount Fuji stands serene.' },
-    { id: 18, title: 'The Garden of Earthly Delights', artist: 'Hieronymus Bosch', year: '1503', image: '/images/18.jpg', description: 'Paradise and perdition dance together in this triptych of human desire.' },
-    { id: 19, title: 'The Lovers', artist: 'René Magritte', year: '1928', image: '/images/19.jpg', description: 'Love veiled in mystery, faces shrouded yet intimately close.' },
-    { id: 20, title: 'Café Terrace at Night', artist: 'Vincent van Gogh', year: '1888', image: '/images/20.jpg', description: 'The night café terrace glows with warmth under a starlit sky.' }
-  ];
+  useEffect(() => {
+    async function fetchArtworks() {
+      try {
+        const res = await fetch('/api/artworks');
+        const data = await res.json();
+        if (data.success) {
+          setArtworks(data.data);
+          // Fetch stats for all artworks
+          data.data.forEach(artwork => fetchStats(artwork._id));
+        }
+      } catch (error) {
+        console.error('Error fetching artworks:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) setUser(data.data);
+        }
+      } catch (e) {
+        // silently ignore
+      }
+    }
+    fetchArtworks();
+    checkAuth();
+  }, []);
+
+  const fetchStats = async (artworkId) => {
+    try {
+      const res = await fetch(`/api/interactions/stats/${artworkId}`);
+      const data = await res.json();
+      if (data.success) {
+        setStats(prev => ({ ...prev, [artworkId]: data.data }));
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
+
+  const fetchUserInteractions = async (artworkId) => {
+    if (!user) return;
+    try {
+      const res = await fetch(`/api/interactions/${artworkId}`);
+      const data = await res.json();
+      if (data.success) {
+        setInteractions(prev => ({ ...prev, [artworkId]: data.data }));
+      }
+    } catch (error) {
+      console.error('Error fetching interactions:', error);
+    }
+  };
+
+  const handleInteraction = async (artworkId, type) => {
+    if (!user) {
+      alert('Please login to interact with artworks');
+      router.push('/login');
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/interactions/${artworkId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ type })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStats(prev => ({ ...prev, [artworkId]: data.data.counts }));
+        fetchUserInteractions(artworkId);
+      }
+    } catch (error) {
+      console.error('Error handling interaction:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (user && artworks.length > 0) {
+      artworks.forEach(artwork => fetchUserInteractions(artwork._id));
+    }
+  }, [user, artworks.length]);
 
   return (
     <div style={{
@@ -45,7 +118,10 @@ export default function CatalogPage() {
           <img src="/images/logo.png" alt="Galerium" style={{ height: '100px', width: '100px', objectFit: 'contain', filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)' }} />
         </div>
 
-        <div>
+        <div className="d-flex align-items-center gap-3">
+          {user && ['artist','admin'].includes(user.role) && (
+            <button className="btn" onClick={() => router.push('/submit')} style={{ borderRadius: 6, padding: '6px 12px', border: '2px solid #cbbd93', color: '#cbbd93', backgroundColor: 'transparent', marginRight: 8 }}>Submit Artwork</button>
+          )}
           <button className="btn" onClick={() => router.push('/login')} style={{ borderRadius: 6, padding: '6px 12px', border: '2px solid #cbbd93', color: '#cbbd93', backgroundColor: 'transparent', marginRight: 8 }}>Login</button>
           <button className="btn" onClick={() => router.push('/signup')} style={{ borderRadius: 6, padding: '6px 12px', backgroundColor: '#e0c1a2ff', color: '#fff', border: 'none' }}>Register</button>
         </div>
@@ -55,20 +131,85 @@ export default function CatalogPage() {
         <h1 style={{ color: '#fffafa', marginBottom: '0.25rem' }}>Catalog</h1>
         <p style={{ color: 'rgba(203, 189, 147, 0.9)', marginTop: 0, marginBottom: '1.25rem' }}>Browse all paintings in our collection.</p>
 
-        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '3rem', color: '#cbbd93' }}>Loading artworks...</div>
+        ) : (
+          <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
           {artworks.map((a) => (
-            <article key={a.id} onClick={() => setSelected(a)} style={{ background: 'rgba(0,16,38,0.8)', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(203,189,147,0.08)', cursor: 'pointer', transition: 'transform 200ms ease' }}>
-              <div style={{ width: '100%', height: 180, overflow: 'hidden' }}>
+            <article key={a._id} style={{ background: 'rgba(0,16,38,0.8)', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(203,189,147,0.08)', transition: 'transform 200ms ease' }}>
+              <div onClick={() => setSelected(a)} style={{ width: '100%', height: 180, overflow: 'hidden', cursor: 'pointer' }}>
                 <img src={a.image} alt={a.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               </div>
               <div style={{ padding: '0.75rem' }}>
                 <h3 style={{ margin: '0 0 6px 0', color: '#cbbd93', fontSize: '1.05rem' }}>{a.title}</h3>
                 <p style={{ margin: '0 0 8px 0', color: '#e0c1a2', fontSize: '0.92rem' }}>{a.artist} • {a.year}</p>
-                <p style={{ margin: 0, color: '#fffafa', backgroundColor: 'rgba(255,255,255,0.02)', padding: '8px', borderRadius: 8, fontSize: '0.9rem', lineHeight: 1.4 }}>{a.description}</p>
+                <p style={{ margin: '0 0 10px 0', color: '#fffafa', backgroundColor: 'rgba(255,255,255,0.02)', padding: '8px', borderRadius: 8, fontSize: '0.9rem', lineHeight: 1.4 }}>{a.description}</p>
+                
+                {/* Interaction Buttons */}
+                <div style={{ display: 'flex', gap: '8px', justifyContent: 'space-between', marginTop: '10px' }}>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleInteraction(a._id, 'like'); }}
+                    style={{
+                      flex: 1,
+                      background: interactions[a._id]?.liked ? '#dc3545' : 'rgba(203,189,147,0.1)',
+                      color: interactions[a._id]?.liked ? '#fff' : '#cbbd93',
+                      border: '1px solid rgba(203,189,147,0.3)',
+                      padding: '6px',
+                      borderRadius: 6,
+                      cursor: 'pointer',
+                      fontSize: '0.85rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    ❤️ {stats[a._id]?.likes || 0}
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleInteraction(a._id, 'favorite'); }}
+                    style={{
+                      flex: 1,
+                      background: interactions[a._id]?.favorited ? '#ffc107' : 'rgba(203,189,147,0.1)',
+                      color: interactions[a._id]?.favorited ? '#000' : '#cbbd93',
+                      border: '1px solid rgba(203,189,147,0.3)',
+                      padding: '6px',
+                      borderRadius: 6,
+                      cursor: 'pointer',
+                      fontSize: '0.85rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    ⭐ {stats[a._id]?.favorites || 0}
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleInteraction(a._id, 'share'); }}
+                    style={{
+                      flex: 1,
+                      background: interactions[a._id]?.shared ? '#28a745' : 'rgba(203,189,147,0.1)',
+                      color: interactions[a._id]?.shared ? '#fff' : '#cbbd93',
+                      border: '1px solid rgba(203,189,147,0.3)',
+                      padding: '6px',
+                      borderRadius: 6,
+                      cursor: 'pointer',
+                      fontSize: '0.85rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    🔗 {stats[a._id]?.shares || 0}
+                  </button>
+                </div>
               </div>
             </article>
-          ))}
-        </section>
+            ))}
+          </section>
+        )}
 
         {/* Modal / lightbox for selected artwork */}
         {selected && (
