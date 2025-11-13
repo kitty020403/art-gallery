@@ -81,6 +81,19 @@ export default function LandingPage() {
       position: 'relative',
       overflow: 'hidden'
     }}>
+      <div
+    style={{
+      position: 'absolute',
+      inset: 0,
+      backgroundImage: "url('/images/1 (2).png')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      opacity: 0.05,
+      zIndex: 0,
+    }}
+></div>
+
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap');
         
@@ -204,7 +217,7 @@ export default function LandingPage() {
               letterSpacing: '1px',
               fontSize: 'clamp(2rem, 5vw, 3.5rem)'
             }}>
-              Discover Masterpieces
+              Discover Tunisia's artistic heritage
             </h1>
             <p className="lead" style={{ 
               color: 'rgba(203, 189, 147, 0.9)',
