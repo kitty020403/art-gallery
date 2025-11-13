@@ -1,40 +1,77 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function MonProfil() {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Données utilisateur (exemple tunisien)
-  const userData = {
-    nomComplet: "Sarah Mr",
-    email: "Sarah.Mr@gmail.com",
-    telephone: "+216 12 345 678",
-    adresse: "15 Rue Habib Bourguiba, Tunis",
-    dateInscription: "15 Mars 2025",
-    ticketsSoumis: 24,
-    ticketsResolus: 16,
-    avatar: "https://randomuser.me/api/portraits/women/17.jpg"
-  };
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (!res.ok) {
+          router.push('/login');
+          return;
+        }
+        const data = await res.json();
+        if (data.success && data.data) {
+          setUser(data.data);
+        } else {
+          router.push('/login');
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        router.push('/login');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchUser();
+  }, [router]);
 
   const [formData, setFormData] = useState({
-    nomComplet: userData.nomComplet,
-    telephone: userData.telephone,
-    adresse: userData.adresse
+    name: ''
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || ''
+      });
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Ici vous ajouteriez la logique pour sauvegarder les modifications
+    // TODO: Implémenter la mise à jour du profil via API
     setIsEditing(false);
     alert("Profil mis à jour avec succès!");
   };
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/login');
+  };
+
+  if (loading) {
+    return (
+      <div className="d-flex min-vh-100 align-items-center justify-content-center" style={{ background: '#001026' }}>
+        <div style={{ color: '#cbbd93', fontSize: '1.5rem' }}>Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="d-flex min-vh-100" style={{
@@ -47,12 +84,11 @@ export default function MonProfil() {
             {/* Carte Profil */}
             <div className="card shadow-lg border-0 mb-4" style={{
               backdropFilter: 'blur(8px)',
-              backgroundColor: 'rgba(255, 255, 255, 0.85)'
+              backgroundColor: 'rgba(255, 255, 255, 0.9)'
             }}>
               <div className="card-header border-0 bg-transparent">
                 <h2 className="mb-0 text-center fw-bold" style={{ color: '#39395e' }}>
-                  <i className="bi bi-person-circle me-2"></i>
-                  Mon Profil
+                  My Profile
                 </h2>
               </div>
               
@@ -60,50 +96,51 @@ export default function MonProfil() {
                 <div className="row">
                   {/* Colonne Photo */}
                   <div className="col-md-4 text-center mb-4 mb-md-0">
-                    <img 
-                      src={userData.avatar} 
-                      alt="Photo de profil" 
-                      className="rounded-circle mb-3 border" 
-                      width="150" 
-                      height="150"
+                    <div 
+                      className="rounded-circle mb-3 border d-flex align-items-center justify-content-center mx-auto" 
                       style={{ 
-                        borderColor: 'rgba(185, 87, 151, 0.3)',
-                        objectFit: 'cover'
+                        width: '150px',
+                        height: '150px',
+                        borderColor: 'rgba(203, 189, 147, 0.5)',
+                        backgroundColor: 'rgba(203, 189, 147, 0.1)',
+                        fontSize: '3rem',
+                        color: '#cbbd93',
+                        fontWeight: 'bold'
                       }}
-                    />
-                    <input type="file" className="form-control form-control-sm mt-2" />
+                    >
+                      {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                    </div>
                     <div className="mt-3">
-                      <span className="badge" style={{ backgroundColor: '#4338ca' }}>Utilisateur Standard</span>
+                      <span className="badge" style={{ 
+                        backgroundColor: user.role === 'admin' ? '#dc3545' : user.role === 'artist' ? '#28a745' : '#6c757d',
+                        fontSize: '0.9rem',
+                        padding: '8px 16px'
+                      }}>
+                        {user.role === 'admin' ? 'Administrator' : user.role === 'artist' ? 'Artist' : 'User'}
+                      </span>
                     </div>
                     <div className="mt-4">
-                      <div className="d-flex justify-content-between border-bottom py-2">
-                        <span className="text-muted">Membre depuis</span>
-                        <span>{userData.dateInscription}</span>
-                      </div>
-                      <div className="d-flex justify-content-between border-bottom py-2">
-                        <span className="text-muted">Tickets soumis</span>
-                        <span>{userData.ticketsSoumis}</span>
-                      </div>
-                      <div className="d-flex justify-content-between border-bottom py-2">
-                        <span className="text-muted">Tickets résolus</span>
-                        <span>{userData.ticketsResolus}</span>
+                      <div className="border-bottom py-2">
+                        <small className="text-muted">Member since</small>
+                        <div className="fw-bold">{new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Colonne Formulaire */}
+                  {/* Colonne Informations */}
                   <div className="col-md-8">
                     {isEditing ? (
                       <form onSubmit={handleSubmit}>
                         <div className="mb-3">
-                          <label className="form-label fw-bold" style={{ color: '#39395e' }}>Nom complet</label>
+                          <label className="form-label fw-bold" style={{ color: '#39395e' }}>Full Name</label>
                           <input
                             type="text"
                             className="form-control"
-                            name="nomComplet"
-                            value={formData.nomComplet}
+                            name="name"
+                            value={formData.name}
                             onChange={handleChange}
-                            style={{ borderColor: 'rgba(185, 87, 151, 0.3)' }}
+                            required
+                            style={{ borderColor: 'rgba(203, 189, 147, 0.3)' }}
                           />
                         </div>
 
@@ -112,34 +149,11 @@ export default function MonProfil() {
                           <input
                             type="email"
                             className="form-control"
-                            value={userData.email}
+                            value={user.email}
                             disabled
-                            style={{ borderColor: 'rgba(185, 87, 151, 0.3)' }}
+                            style={{ borderColor: 'rgba(203, 189, 147, 0.3)', backgroundColor: '#f5f5f5' }}
                           />
-                        </div>
-
-                        <div className="mb-3">
-                          <label className="form-label fw-bold" style={{ color: '#39395e' }}>Téléphone</label>
-                          <input
-                            type="tel"
-                            className="form-control"
-                            name="telephone"
-                            value={formData.telephone}
-                            onChange={handleChange}
-                            style={{ borderColor: 'rgba(185, 87, 151, 0.3)' }}
-                          />
-                        </div>
-
-                        <div className="mb-3">
-                          <label className="form-label fw-bold" style={{ color: '#39395e' }}>Adresse</label>
-                          <textarea
-                            className="form-control"
-                            name="adresse"
-                            rows="3"
-                            value={formData.adresse}
-                            onChange={handleChange}
-                            style={{ borderColor: 'rgba(185, 87, 151, 0.3)' }}
-                          ></textarea>
+                          <small className="text-muted">Email cannot be changed</small>
                         </div>
 
                         <div className="d-flex justify-content-end gap-2">
@@ -147,118 +161,105 @@ export default function MonProfil() {
                             type="button" 
                             className="btn btn-sm"
                             style={{ 
-                              backgroundColor: 'rgba(106, 13, 173, 0.1)',
-                              color: '#39395e'
+                              backgroundColor: 'rgba(203, 189, 147, 0.1)',
+                              color: '#39395e',
+                              border: 'none'
                             }}
-                            onClick={() => setIsEditing(false)}
+                            onClick={() => {
+                              setIsEditing(false);
+                              setFormData({ name: user.name });
+                            }}
                           >
-                            Annuler
+                            Cancel
                           </button>
                           <button 
                             type="submit" 
                             className="btn btn-sm"
                             style={{ 
-                              background: '#001026',
-                              color: 'white'
+                              background: '#cbbd93',
+                              color: '#001026',
+                              border: 'none'
                             }}
                           >
-                            Enregistrer
+                            Save Changes
                           </button>
                         </div>
                       </form>
                     ) : (
                       <div>
                         <div className="mb-4">
-                          <h5 style={{ color: '#39395e' }}>{userData.nomComplet}</h5>
-                          <p className="text-muted mb-1">
-                            <i className="bi bi-envelope me-2"></i>
-                            {userData.email}
-                          </p>
-                          <p className="text-muted mb-1">
-                            <i className="bi bi-telephone me-2"></i>
-                            {userData.telephone}
-                          </p>
-                          <p className="text-muted">
-                            <i className="bi bi-geo-alt me-2"></i>
-                            {userData.adresse}
-                          </p>
+                          <h5 style={{ color: '#39395e', marginBottom: '20px' }}>{user.name || 'User'}</h5>
+                          <div className="mb-3">
+                            <small className="text-muted d-block">Email</small>
+                            <div style={{ color: '#39395e' }}>{user.email || 'N/A'}</div>
+                          </div>
+                          <div className="mb-3">
+                            <small className="text-muted d-block">Account Type</small>
+                            <div style={{ color: '#39395e' }}>
+                              {user.role === 'admin' ? 'Administrator' : user.role === 'artist' ? 'Artist' : 'Standard User'}
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="d-flex gap-2">
+                        <div className="d-flex flex-wrap gap-2">
                           <button 
                             className="btn btn-sm"
                             style={{ 
-                              background: '#001026',
-                              color: 'white'
+                              background: '#cbbd93',
+                              color: '#001026',
+                              border: 'none'
                             }}
                             onClick={() => setIsEditing(true)}
                           >
                             <i className="bi bi-pencil-square me-2"></i>
-                            Modifier le profil
+                            Edit Profile
                           </button>
+
+                          {(user.role === 'artist' || user.role === 'admin') && (
+                            <button 
+                              className="btn btn-sm"
+                              style={{ 
+                                background: '#001026',
+                                color: '#cbbd93',
+                                border: '1px solid #cbbd93'
+                              }}
+                              onClick={() => router.push('/submit')}
+                            >
+                              <i className="bi bi-upload me-2"></i>
+                              Submit Artwork
+                            </button>
+                          )}
+
+                          {(user.role === 'artist' || user.role === 'admin') && (
+                            <button 
+                              className="btn btn-sm"
+                              style={{ 
+                                background: 'transparent',
+                                color: '#001026',
+                                border: '1px solid rgba(203, 189, 147, 0.5)'
+                              }}
+                              onClick={() => router.push('/mysubmissions')}
+                            >
+                              <i className="bi bi-folder me-2"></i>
+                              My Submissions
+                            </button>
+                          )}
 
                           <button 
                             className="btn btn-sm"
                             style={{ 
-                              backgroundColor: 'rgba(106, 13, 173, 0.1)',
-                              color: '#39395e'
+                              backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                              color: '#dc3545',
+                              border: '1px solid rgba(220, 53, 69, 0.3)'
                             }}
-                            onClick={() => router.push('/mes-tickets')}
+                            onClick={handleLogout}
                           >
-                            <i className="bi bi-ticket-detailed me-2"></i>
-                            Voir mes tickets
+                            <i className="bi bi-box-arrow-right me-2"></i>
+                            Logout
                           </button>
                         </div>
                       </div>
                     )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Section Sécurité */}
-            <div className="card shadow-lg border-0" style={{
-              backdropFilter: 'blur(8px)',
-              backgroundColor: 'rgba(255, 255, 255, 0.85)'
-            }}>
-              <div className="card-header border-0 bg-transparent">
-                <h5 className="mb-0 fw-bold" style={{ color: '#39395e' }}>
-                  <i className="bi bi-shield-lock me-2"></i>
-                  Sécurité du compte
-                </h5>
-              </div>
-              <div className="card-body">
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <div>
-                    <h6 className="mb-1">Changer le mot de passe</h6>
-                    <small className="text-muted">Dernière modification il y a 3 mois</small>
-                  </div>
-                  <button 
-                    className="btn btn-sm"
-                    style={{ 
-                      backgroundColor: 'rgba(106, 13, 173, 0.1)',
-                      color: '#39395e'
-                    }}
-                    onClick={() => router.push('/changer-mot-de-passe')}
-                  >
-                    Modifier
-                  </button>
-                </div>
-
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <h6 className="mb-1">Authentification à deux facteurs</h6>
-                    <small className="text-muted">Non activée</small>
-                  </div>
-                  <div className="form-check form-switch">
-                    <input 
-                      className="form-check-input" 
-                      type="checkbox" 
-                      style={{ 
-                        backgroundColor: '#39395e',
-                        borderColor: '#39395e'
-                      }}
-                    />
                   </div>
                 </div>
               </div>

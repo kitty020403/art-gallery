@@ -1,12 +1,28 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function LandingPage() {
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStartX, setTouchStartX] = useState(null);
   const [touchEndX, setTouchEndX] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) setUser(data.data);
+        }
+      } catch (e) {
+        // silently ignore
+      }
+    }
+    checkAuth();
+  }, []);
 
   const artworks = [
     {
@@ -140,6 +156,9 @@ export default function LandingPage() {
           <a href="#about" className="nav-link">Artists</a>
           <a href="#explore" className="nav-link">Explore</a>
           <a href="#contact" className="nav-link">Connect</a>
+          {user && ['artist','admin'].includes(user.role) && (
+            <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
+          )}
         </div>
 
         <div className="d-flex align-items-center gap-2">
@@ -294,7 +313,7 @@ export default function LandingPage() {
                         margin: 0,
                         fontWeight: '300'
                       }}>
-                        "{artwork.description}"
+                        &quot;{artwork.description}&quot;
                       </p>
                     </div>
                   </div>

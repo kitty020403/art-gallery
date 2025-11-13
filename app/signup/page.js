@@ -1,13 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
   });
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -16,10 +20,34 @@ export default function SignupPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-   
-    alert('Signup form submitted!');
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        // Store user data
+        localStorage.setItem('user', JSON.stringify(data.data.user));
+        
+        // Redirect to catalog
+        router.push('/catalog');
+      } else {
+        setError(data.error || 'Registration failed');
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -35,6 +63,13 @@ export default function SignupPage() {
                 <h2 className="fw-bold" style={{ color: '#39395e' }}>Create Your Account</h2>
                 <p className="text-muted">Fill in your details to get started</p>
               </div>
+
+              {error && (
+                <div className="alert alert-danger d-flex align-items-center" role="alert">
+                  <i className="fas fa-exclamation-triangle me-2"></i>
+                  {error}
+                </div>
+              )}
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
@@ -96,6 +131,7 @@ export default function SignupPage() {
                   <button 
                     type="submit" 
                     className="btn btn-primary btn-lg fw-bold py-3"
+                    disabled={isLoading}
                     style={{
                       background: '#001026',
                       border: 'none',
@@ -105,7 +141,7 @@ export default function SignupPage() {
                     onMouseOver={(e) => e.target.style.opacity = '0.9'}
                     onMouseOut={(e) => e.target.style.opacity = '1'}
                   >
-                    Sign Up
+                    {isLoading ? 'Creating Account...' : 'Sign Up'}
                   </button>
                 </div>
 
