@@ -151,22 +151,14 @@ export default function LandingPage() {
           />
         </div>
 
-        <div className="d-flex align-items-center gap-4">
-<<<<<<< HEAD
-          <a href="#gallery" className="nav-link">Gallery</a>
+        <div className="d-flex align-items-center gap-4">         
+           <a href="/catalog"  className="nav-link">Gallery</a>
           <a href="#about" className="nav-link">Artists</a>
           <a href="#explore" className="nav-link">Explore</a>
           <a href="#contact" className="nav-link">Connect</a>
           {user && ['artist','admin'].includes(user.role) && (
             <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
           )}
-=======
-          <a href="#home" className="nav-link">Home</a>
-          <a href="#artworks" className="nav-link">Artworks</a>
-          <a href="#artists" className="nav-link">Artists</a>
-          <a href="#about" className="nav-link">About</a>
-  
->>>>>>> 6b08762773ec75678f18476bb88f55d24bcf30df
         </div>
 
         <div className="d-flex align-items-center gap-2">

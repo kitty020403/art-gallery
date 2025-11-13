@@ -4,10 +4,10 @@ import User from '@/models/User';
 import jwt from 'jsonwebtoken';
 
 // GET /api/users/:id - Public user profile (limited fields)
-export async function GET(request, { params }) {
+export async function GET(request, context) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await context.params;
 
     const user = await User.findById(id).select('name role createdAt');
     if (!user) {
@@ -22,11 +22,11 @@ export async function GET(request, { params }) {
 }
 
 // PUT /api/users/:id - Update user role (admin only)
-export async function PUT(request, { params }) {
+export async function PUT(request, context) {
   try {
     await connectDB();
     
-    const { id } = params;
+    const { id } = await context.params;
     
     // Check auth
     const token = request.cookies.get('token')?.value;
