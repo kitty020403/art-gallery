@@ -323,81 +323,286 @@ export default function MyAccountPage() {
       `}</style>
 
       {/* Header */}
-      <div
-    style={{
-      position: 'absolute',
-      inset: 0,
-      backgroundImage: "url('/images/1 (2).png')",
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      opacity: 0.05,
-      zIndex: 0,
-    }}
-  ></div>
-      <nav style={{
-        background: 'rgba(10, 25, 47, 0.95)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(190, 161, 115, 0.1)',
-        padding: '12px 40px',
+      {/* Header */}
+      <nav className="d-flex align-items-center justify-content-between px-5" style={{
+        zoom: '0.75',
+        background: '#0A192B',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(203, 189, 147, 0.15)',
+        height: '140px',
         position: 'sticky',
         top: 0,
-        zIndex: 1000,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+        zIndex: 1000
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-            <img 
-              src="/images/logo.png" 
-              alt="Galerium" 
-              onClick={() => router.push('/landingpage')}
-              style={{
-                height: '48px',
-                width: '120px',
-                objectFit: 'contain',
-                filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)',
-                cursor: 'pointer',
-                transition: 'transform 0.3s ease'
-              }}
-              onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-              onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
-            />
-          </div>
+        <div className="d-flex align-items-center">
+          <img 
+            src="/images/logo.png" 
+            alt="Galerium" 
+            onClick={() => router.push('/')}
+            style={{
+              height: '2500px',
+              width: '350px',
+              objectFit: 'contain',
+              filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)',
+              cursor: 'pointer',
+              transition: 'transform 0.3s ease'
+            }}
+            onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+            onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+          />
+        </div>
+        {/* Nav Links + Search */}
+<div className="d-flex align-items-center gap-4">
+  {/* Home */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '1200px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="home"
+    className="nav-link"
+  >
+    <i className="fas fa-home" style={{ fontSize: '20px' }}></i>
+    Home
+  </a>
 
-          <div style={{ display: 'flex', gap: '24px' }} className="hidden md:flex">
-            <a 
-              href="/landingpage" 
-              className="nav-link-account"
-              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-            >
-              <Home className="h-4 w-4 opacity-80" strokeWidth={1.5} />
-              Home
-            </a>
-            <a href="/artworks" className="nav-link-account">
-              Artworks
-            </a>
-            <a href="/artists" className="nav-link-account">
-              Artists
-            </a>
-            <a href="/about" className="nav-link-account">
-              About
-            </a>
-          </div>
+  {/* Artworks */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '1050px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="artworks"
+    className="nav-link"
+  >
+    <i className="fas fa-palette" style={{ fontSize: '20px' }}></i>
+    Artworks
+  </a>
+
+  {/* Artists */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '925px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="artists"
+    className="nav-link"
+  >
+    <i className="fas fa-user" style={{ fontSize: '20px' }}></i>
+    Artists
+  </a>
+
+  {/* About */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '820px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="aboutus"
+    className="nav-link"
+  >
+    <i className="fas fa-info-circle" style={{ fontSize: '20px' }}></i>
+    About
+  </a>
+
+
+    {/* Search Bar */}
+    <div style={{ position: 'absolute', top: '110px' , right:'850px' ,transform: 'translateY(-80%)'}}>
+      <input 
+        type="text" 
+        placeholder="          Search for a specific painting" 
+        style={{
+          padding: '8px 32px 8px 12px',
+          borderRadius: '60px',
+          fontSize:'22px',
+          border: '1.5px solid #BEA173',
+          outline: 'none',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          color: '#fff',
+          width: '400px'
+        }}
+      />
+      <i className="fas fa-search" style={{
+        fontSize: '25px',
+        position: 'absolute',
+        right: '360px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        color: '#BEA173'
+      }}></i>
+    </div>
+  </div>
+
+        <div className="d-flex align-items-center gap-4">
+          {user && ['artist','admin'].includes(user.role) && (
+            <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
+          )}
+
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Button 
-            variant="ghost" 
-            className="text-[#CBBD93] hover:bg-[#BEAD73]/10 transition-colors duration-200" 
-            onClick={handleLogout}
+        <div className="d-flex align-items-center gap-2">
+          <button
+            className="btn btn-hover-effect"
+            onClick={() => router.push('/myaccount')}
+            style={{
+              borderRadius: '12px',
+              padding: '8px 18px',
+              border: '1.5px solid #BEA173',
+              backgroundColor: '#BEA173',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              fontWeight: '400',
+              color: '#001026',
+              fontSize: '18px',
+              letterSpacing: '0.5px',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#cbbd93';
+              e.currentTarget.style.color = '#001026';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#BEA173';
+            }}
           >
-            <LogIn className="mr-1.5 h-4 w-4 opacity-80" strokeWidth={1.5} />
-            Sign Out
-          </Button>
+            <span
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'transparent'
+              }}
+            >
+              <i className="fas fa-user" style={{ color: '#001026', fontSize: '16px' }}></i>
+            </span>
+            <span style={{ display: 'inline-block' }}>My Account</span>
+            
+          </button>
+          <button
+            className="btn btn-hover-effect"
+            onClick={() => router.push('/signup')}
+            style={{
+              borderRadius: '12px',
+              padding: '8px 18px',
+              border: '1.5px solid #BEA173',
+              backgroundColor: 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              fontWeight: '300',
+              color: '#BEA173',
+              fontSize: '18px',
+              letterSpacing: '0.5px',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#cbbd93';
+              e.currentTarget.style.color = '#001026';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#BEA173';
+            }}
+          >
+            <span
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'transparent'
+              }}
+            >
+              <i className="fas fa-user-plus" style={{ color: '#BEA173', fontSize: '16px' }}></i>
+            </span>
+            <span style={{ display: 'inline-block' }}>Sign Up</span>
+            
+          </button>
+          <button
+            className="btn btn-hover-effect"
+            onClick={() => router.push('/login')}
+            style={{
+              borderRadius: '12px',
+              padding: '8px 18px',
+              border: '1.5px solid #BEA173',
+              backgroundColor: 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              fontWeight: '300',
+              color: '#BEA173',
+              fontSize: '18px',
+              letterSpacing: '0.5px',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#cbbd93';
+              e.currentTarget.style.color = '#001026';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#BEA173';
+            }}
+          >
+            <span
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'transparent'
+              }}
+            >
+              <i className="fas fa-sign-in-alt" style={{ color: '#BEA173', fontSize: '16px' }}></i>
+            </span>
+            <span style={{ display: 'inline-block' }}>login</span>
+            
+          </button>
+          
         </div>
       </nav>
+
       
       {/* Account Type Indicator */}
       <div style={{

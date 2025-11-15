@@ -1,8 +1,9 @@
-
 'use client';
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function ArtistsPage() {
+  const router = useRouter();
   const [artists, setArtists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -17,17 +18,18 @@ export default function ArtistsPage() {
           if (data.success) {
             setUser(data.data);
           } else {
-            window.location.href = '/login';
+            router.push('/login');
           }
         } else {
-          window.location.href = '/login';
+          router.push('/login');
         }
-      } catch {
-        window.location.href = '/login';
+      } catch (error) {
+        console.error('Auth check error:', error);
+        router.push('/login');
       }
     }
     checkAuth();
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (!user) return;
@@ -35,12 +37,19 @@ export default function ArtistsPage() {
     async function fetchArtists() {
       try {
         const res = await fetch('/api/artists');
+        if (!res.ok) {
+          throw new Error(`API error: ${res.status}`);
+        }
         const data = await res.json();
         if (data.success) {
-          setArtists(data.data);
+          setArtists(data.data || []);
+        } else {
+          console.error('Failed to fetch artists:', data.error);
+          setArtists([]);
         }
       } catch (error) {
         console.error('Error fetching artists:', error);
+        setArtists([]);
       } finally {
         setLoading(false);
       }
@@ -48,19 +57,21 @@ export default function ArtistsPage() {
     fetchArtists();
   }, [user]);
 
-  const navigate = (path) => {
-    window.location.href = path;
+  const handleNavigate = (path) => {
+    router.push(path);
   };
 
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
-    } catch {}
-    window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+    router.push('/login');
   };
 
   const filteredArtists = artists.filter(artist => 
-    artist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (artist.name && artist.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
     (artist.bio && artist.bio.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
@@ -107,19 +118,20 @@ export default function ArtistsPage() {
     }}>
       {/* Background Image with Opacity */}
       <div style={{
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  backgroundImage: "url('/images/1 (2).png')",
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat',
-  opacity: 0.6,
-  filter: 'blur(15px) saturate(1.2)', // Heavy blur + more color
-  zIndex: 0
-}} />
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundImage: "url('/images/1 (2).png')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        opacity: 0.6,
+        filter: 'blur(15px) saturate(1.2)',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
 
       {/* Overlay gradient for better readability */}
       <div style={{
@@ -129,7 +141,8 @@ export default function ArtistsPage() {
         width: '100%',
         height: '100%',
         background: 'linear-gradient(180deg, rgba(0,16,38,0.7) 0%, rgba(0,16,38,0.85) 100%)',
-        zIndex: 0
+        zIndex: 0,
+        pointerEvents: 'none'
       }} />
 
       {/* Content */}
@@ -157,17 +170,17 @@ export default function ArtistsPage() {
               <img 
                 src="/images/logo.png" 
                 alt="Galerium" 
-                onClick={() => navigate('/home')}
+                onClick={() => handleNavigate('/landingpage')}
                 style={{
-                  height: '60px',
-                  width: '180px',
+                  height: '48px',
+                  width: '140px',
                   objectFit: 'contain',
                   filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)',
                   cursor: 'pointer',
                   transition: 'transform 0.3s ease'
                 }}
-                onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-                onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               />
             </div>
 
@@ -178,7 +191,7 @@ export default function ArtistsPage() {
               gap: '32px'
             }}>
               <a 
-                onClick={() => navigate('/home')}
+                onClick={() => handleNavigate('/landingpage')}
                 style={{
                   fontSize: '16px',
                   fontWeight: '400',
@@ -206,7 +219,7 @@ export default function ArtistsPage() {
               </a>
 
               <a 
-                onClick={() => navigate('/artworks')}
+                onClick={() => handleNavigate('/artworks')}
                 style={{
                   fontSize: '16px',
                   fontWeight: '400',
@@ -234,7 +247,7 @@ export default function ArtistsPage() {
               </a>
 
               <a 
-                onClick={() => navigate('/artists')}
+                onClick={() => handleNavigate('/artists')}
                 style={{
                   fontSize: '16px',
                   fontWeight: '600',
@@ -256,7 +269,7 @@ export default function ArtistsPage() {
               </a>
 
               <a 
-                onClick={() => navigate('/aboutus')}
+                onClick={() => handleNavigate('/aboutus')}
                 style={{
                   fontSize: '16px',
                   fontWeight: '400',
@@ -287,7 +300,7 @@ export default function ArtistsPage() {
             {/* Right Side Buttons */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <button
-                onClick={() => navigate('/myaccount')}
+                onClick={() => handleNavigate('/myaccount')}
                 style={{
                   borderRadius: '10px',
                   padding: '10px 20px',
@@ -404,7 +417,7 @@ export default function ArtistsPage() {
         </div>
 
         {/* Main Content */}
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '60px 40px', flex: 1 }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '60px 40px', flex: 1, width: '100%' }}>
           <div style={{ textAlign: 'center', marginBottom: '50px' }}>
             <h1 style={{ 
               fontFamily: "'Playfair Display', serif", 
@@ -456,8 +469,8 @@ export default function ArtistsPage() {
             }}>
               {filteredArtists.map((artist, index) => (
                 <div 
-                  key={artist._id}
-                  onClick={() => navigate(`/artists/${artist._id}`)}
+                  key={artist._id || index}
+                  onClick={() => handleNavigate(`/artists/${artist._id}`)}
                   style={{
                     background: 'linear-gradient(145deg, rgba(10, 25, 47, 0.8) 0%, rgba(15, 35, 60, 0.7) 100%)',
                     border: '1px solid rgba(190, 161, 115, 0.2)',
@@ -493,15 +506,15 @@ export default function ArtistsPage() {
                     {artist.image ? (
                       <img 
                         src={artist.image} 
-                        alt={artist.name}
+                        alt={artist.name || 'Artist'}
                         style={{ 
                           width: '100%', 
                           height: '100%', 
                           objectFit: 'cover',
                           transition: 'transform 0.4s'
                         }}
-                        onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
-                        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                       />
                     ) : (
                       <i className="fas fa-user" style={{ fontSize: '4rem', color: 'rgba(190,161,115,0.4)' }}></i>
@@ -523,7 +536,7 @@ export default function ArtistsPage() {
                       marginBottom: '10px',
                       fontWeight: '600'
                     }}>
-                      {artist.name}
+                      {artist.name || 'Unknown Artist'}
                     </h3>
                     {artist.period && (
                       <p style={{ 
@@ -608,7 +621,7 @@ export default function ArtistsPage() {
               alignItems: 'center'
             }}>
               <a 
-                onClick={() => navigate('/explore')}
+                onClick={() => handleNavigate('/explore')}
                 style={{
                   color: 'rgba(203, 189, 147, 0.7)',
                   fontSize: '14px',
@@ -622,7 +635,7 @@ export default function ArtistsPage() {
                 Explore More
               </a>
               <a 
-                onClick={() => navigate('/details')}
+                onClick={() => handleNavigate('/details')}
                 style={{
                   color: 'rgba(203, 189, 147, 0.7)',
                   fontSize: '14px',
@@ -636,7 +649,7 @@ export default function ArtistsPage() {
                 View Details
               </a>
               <a 
-                onClick={() => navigate('/learn')}
+                onClick={() => handleNavigate('/learn')}
                 style={{
                   color: 'rgba(203, 189, 147, 0.7)',
                   fontSize: '14px',
@@ -657,7 +670,7 @@ export default function ArtistsPage() {
               alignItems: 'center'
             }}>
               <a 
-                onClick={() => navigate('/privacy')}
+                onClick={() => handleNavigate('/privacy')}
                 style={{
                   color: 'rgba(203, 189, 147, 0.7)',
                   fontSize: '14px',
@@ -672,7 +685,7 @@ export default function ArtistsPage() {
               </a>
               <span style={{ color: 'rgba(203, 189, 147, 0.3)' }}>|</span>
               <a 
-                onClick={() => navigate('/terms')}
+                onClick={() => handleNavigate('/terms')}
                 style={{
                   color: 'rgba(203, 189, 147, 0.7)',
                   fontSize: '14px',
