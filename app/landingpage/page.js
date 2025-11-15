@@ -97,6 +97,19 @@ export default function LandingPage() {
       position: 'relative',
       overflow: 'hidden'
     }}>
+      <div
+    style={{
+      position: 'absolute',
+      inset: 0,
+      backgroundImage: "url('/images/1 (2).png')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      opacity: 0.05,
+      zIndex: 0,
+    }}
+></div>
+
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap');
         
@@ -151,14 +164,30 @@ export default function LandingPage() {
           />
         </div>
 
+<<<<<<< HEAD
         <div className="d-flex align-items-center gap-4">         
            <a href="/catalog"  className="nav-link">Gallery</a>
+=======
+        <div className="d-flex align-items-center gap-4">
+
+          <a href="#gallery" className="nav-link">Gallery</a>
+>>>>>>> 506ccb8115634de8e56b9eb3030cb668ee1a694a
           <a href="#about" className="nav-link">Artists</a>
           <a href="#explore" className="nav-link">Explore</a>
           <a href="#contact" className="nav-link">Connect</a>
           {user && ['artist','admin'].includes(user.role) && (
             <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
           )}
+<<<<<<< HEAD
+=======
+
+          <a href="#home" className="nav-link">Home</a>
+          <a href="#artworks" className="nav-link">Artworks</a>
+          <a href="#artists" className="nav-link">Artists</a>
+          <a href="#about" className="nav-link">About</a>
+  
+
+>>>>>>> 506ccb8115634de8e56b9eb3030cb668ee1a694a
         </div>
 
         <div className="d-flex align-items-center gap-2">
@@ -223,7 +252,7 @@ export default function LandingPage() {
               letterSpacing: '1px',
               fontSize: 'clamp(2rem, 5vw, 3.5rem)'
             }}>
-              Discover Masterpieces
+              Discover Tunisia's artistic heritage
             </h1>
             <p className="lead" style={{ 
               color: 'rgba(203, 189, 147, 0.9)',
