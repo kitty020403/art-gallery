@@ -46,8 +46,8 @@ export default function SignInPage() {
           // Use window.location for a full page redirect to ensure cookies are set
           window.location.href = '/profiladmin';
         } else {
-          console.log('Redirecting to catalog');
-          window.location.href = '/catalog';
+          console.log('Redirecting to home page');
+          window.location.href = '/home';
         }
       } else {
         setError(data.error || 'Login failed');
