@@ -163,7 +163,7 @@ export default function LandingPage() {
           <img 
             src="/images/logo.png" 
             alt="Galerium" 
-            onClick={() => router.push('/')}
+            onClick={() => router.push('/home')}
             style={{
               height: '2500px',
               width: '350px',

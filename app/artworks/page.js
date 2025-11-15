@@ -125,17 +125,15 @@ export default function CatalogPage() {
           <img 
             src="/images/logo.png" 
             alt="Galerium" 
-            onClick={() => router.push('/catalog')}
+            onClick={() => router.push('/home')}
             style={{ height: '70px', width: '120px', objectFit: 'contain', cursor: 'pointer', filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)' }} 
           />
         </div>
 
         {/* Protected navigation */}
         <div className="d-none d-md-flex align-items-center gap-4" style={{ color: '#cbbd93' }}>
-          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/catalog')}>Catalog</a>
+          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/artworks')}>Artworks</a>
           <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/artists')}>Artists</a>
-          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/style')}>Explore</a>
-          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/featured')}>Featured</a>
           <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/search')}>Search</a>
           <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/myaccount')}>My Account</a>
         </div>
@@ -151,7 +149,7 @@ export default function CatalogPage() {
       </nav>
 
       <main style={{ padding: '2rem', maxWidth: 1200, margin: '0 auto' }}>
-        <h1 style={{ color: '#fffafa', marginBottom: '0.25rem' }}>Catalog</h1>
+        <h1 style={{ color: '#fffafa', marginBottom: '0.25rem' }}>Artworks</h1>
         <p style={{ color: 'rgba(203, 189, 147, 0.9)', marginTop: 0, marginBottom: '1.25rem' }}>Browse all paintings in our collection.</p>
 
         {loading ? (
