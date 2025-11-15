@@ -120,6 +120,39 @@ export default function ArtistsPage() {
 
       {/* Gradient overlay */}
       <div style={{ position: 'fixed', inset: 0, background: 'linear-gradient(to bottom, rgba(203, 189, 147, 0.03), rgba(0,16,38,1))', pointerEvents: 'none', zIndex: -1 }} />
+    <footer style={{
+        background: '#0A192B',
+        borderTop: '1px solid rgba(203,189,147,0.08)',
+        color: '#cbbd93',
+        padding: '40px 2rem',
+        position: 'relative'
+      }}>
+        <div style={{
+          maxWidth: '1300px',
+          margin: '0 auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '12px'
+        }}>
+          {/* Left: logo + copyright */}
+            <div style={{ fontSize: '1.1rem', color: 'rgba(255, 255, 255, 0.95)',position: 'absolute', bottom:'10px' , left: '50px'}}>© 2025 galerium. All rights reserved.</div>
+
+          {/* Center: nav links */}
+          <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+            <a href="#" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem', position: 'absolute', bottom:'40px' ,right:'1200px'  }}>Explore More</a>
+            <a href="#" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem',position: 'absolute', bottom:'40px' ,right:'1000px' }}>View Details</a>
+            <a href="#" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem',position: 'absolute', bottom:'40px' ,right:'800px' }}>Learn More</a>
+          </div>
+
+          {/* Right: legal links */}
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <a href="/privacy" style={{ color: 'rgba(255, 255, 255, 0.85)', textDecoration: 'none', fontSize: '1.1rem',position: 'absolute', bottom:'10px' , right: '200px' }}>Privacy Policy</a>
+            <span style={{ color: 'rgba(203,189,147,0.45)',position: 'absolute', bottom:'10px' , right: '180px' }}>|</span>
+            <a href="/terms" style={{ color: 'rgba(255, 255, 255, 0.85)', textDecoration: 'none', fontSize: '1.1rem',position: 'absolute', bottom:'10px' , right: '70px' }}>Terms of Use</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
