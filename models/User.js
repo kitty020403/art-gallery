@@ -31,3 +31,4 @@ if (mongoose.models.User) {
   delete mongoose.models.User;
 }
 export default mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', userSchema);
