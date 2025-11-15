@@ -208,16 +208,10 @@ export default function LandingPage() {
           {user && ['artist','admin'].includes(user.role) && (
             <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
           )}
-<<<<<<<<< Temporary merge branch 1
-=========
 
-          <a href="#home" className="nav-link">Home</a>
-          <a href="#artworks" className="nav-link">Artworks</a>
-          <a href="#artists" className="nav-link">Artists</a>
-          <a href="#about" className="nav-link">About</a>
-  
 
->>>>>>>>> Temporary merge branch 2
+
+
         </div>
 
         <div className="d-flex align-items-center gap-2">
