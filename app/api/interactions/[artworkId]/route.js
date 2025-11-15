@@ -6,11 +6,11 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
 // GET /api/interactions/:artworkId - Get user's interactions for an artwork
-export async function GET(request, { params }) {
+export async function GET(request, context) {
   try {
     await connectDB();
     
-    const { artworkId } = params;
+    const { artworkId } = await context.params;
     
     // Check auth
     const token = request.cookies.get('token')?.value;
@@ -45,11 +45,11 @@ export async function GET(request, { params }) {
 }
 
 // POST /api/interactions/:artworkId - Toggle an interaction (like/favorite/share)
-export async function POST(request, { params }) {
+export async function POST(request, context) {
   try {
     await connectDB();
     
-    const { artworkId } = params;
+    const { artworkId } = await context.params;
     const { type } = await request.json();
 
     // Validate type

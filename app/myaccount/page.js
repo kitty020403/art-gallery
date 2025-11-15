@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "../../components/ui/button";
 import {
   LogIn,
@@ -39,63 +39,178 @@ export default function MyAccountPage() {
   const [activeTab, setActiveTab] = useState('buyer');
   const [accountType, setAccountType] = useState('buyer');
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
   
   const [userData, setUserData] = useState({
-    firstName: 'Amira',
-    lastName: 'Ben Salem',
-    email: 'amira.bensalem@example.com',
-    phone: '+216 20 123 456',
-    bio: 'Passionate about Tunisian contemporary art and traditional paintings',
-    location: 'Tunis, Tunisia',
-    instagram: '@amira.art',
-    website: 'www.amiraart.tn',
-    joinDate: 'January 2024'
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    bio: '',
+    location: '',
+    instagram: '',
+    website: '',
+    joinDate: ''
   });
 
-  const artworks = [
-    {
-      id: 1,
-      title: "Médina au Crépuscule",
-      style: "Impressionism",
-      year: "2023",
-      image: "/images/6.jpg",
-      views: 1247,
-      likes: 89
-    },
-    {
-      id: 2,
-      title: "Désert Tunisien",
-      style: "Abstract",
-      year: "2024",
-      image: "/images/7.jpg",
-      views: 2103,
-      likes: 156
-    },
-    {
-      id: 3,
-      title: "Carthage Moderne",
-      style: "Contemporary",
-      year: "2023",
-      image: "/images/8.jpg",
-      views: 892,
-      likes: 67
-    }
-  ];
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (!res.ok) {
+          router.push('/login');
+          return;
+        }
+        const me = await res.json();
+        if (!me.success) {
+          router.push('/login');
+          return;
+        }
 
-  const favorites = [
-    {
-      id: 4,
-      title: "Sousse by Night",
-      artist: "Mohamed Khalil",
-      image: "/images/9.jpg"
-    },
-    {
-      id: 5,
-      title: "Sidi Bou Said",
-      artist: "Leila Hamdi",
-      image: "/images/10.jpg"
+        setUser(me.data); // { userId, email, role }
+
+        // Fetch profile document for additional fields
+        const profileRes = await fetch(`/api/users/${me.data.userId}`);
+        if (profileRes.ok) {
+          const profile = await profileRes.json();
+          if (profile.success && profile.data) {
+            const fullName = profile.data.name || '';
+            const parts = fullName.trim().split(' ');
+            const first = parts.shift() || '';
+            const last = parts.join(' ');
+            setUserData({
+              firstName: first,
+              lastName: last,
+              email: me.data.email || '',
+              phone: profile.data.phone || '',
+              bio: profile.data.bio || '',
+              location: profile.data.location || '',
+              instagram: profile.data.instagram || '',
+              website: profile.data.website || '',
+              joinDate: profile.data.createdAt ? new Date(profile.data.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : ''
+            });
+            setAccountType(profile.data.role || 'user');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        router.push('/login');
+      } finally {
+        setLoading(false);
+      }
     }
-  ];
+    fetchUserData();
+  }, [router]);
+
+  const [artworks, setArtworks] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [artworksLoading, setArtworksLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchUserContent() {
+      if (!user) return;
+      
+      setArtworksLoading(true);
+      try {
+        // Fetch user's submitted artworks
+        const artworksRes = await fetch('/api/artworks');
+        if (artworksRes.ok) {
+          const artworksData = await artworksRes.json();
+          if (artworksData.success) {
+            // Filter artworks submitted by this user
+            const userArtworks = artworksData.data.filter(
+              artwork => artwork.artistId?._id === user._id || artwork.artistId === user._id
+            );
+            setArtworks(userArtworks);
+          }
+        }
+
+        // Fetch user's favorites
+        const favoritesRes = await fetch('/api/artworks');
+        if (favoritesRes.ok) {
+          const allArtworks = await favoritesRes.json();
+          if (allArtworks.success) {
+            // Fetch interaction states for all artworks to find favorites
+            const favoriteArtworks = [];
+            for (const artwork of allArtworks.data) {
+              const interactionRes = await fetch(`/api/interactions/${artwork._id}`);
+              if (interactionRes.ok) {
+                const interactionData = await interactionRes.json();
+                if (interactionData.success && interactionData.data?.isFavorited) {
+                  favoriteArtworks.push({
+                    ...artwork,
+                    id: artwork._id,
+                    title: artwork.title,
+                    artist: artwork.artistId?.name || 'Unknown Artist',
+                    image: artwork.imageUrl
+                  });
+                }
+              }
+            }
+            setFavorites(favoriteArtworks);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user content:', error);
+      } finally {
+        setArtworksLoading(false);
+      }
+    }
+    
+    fetchUserContent();
+  }, [user]);
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/login');
+  };
+
+  // Save profile information to database
+  const [saveStatus, setSaveStatus] = useState({ type: '', message: '' });
+  const handleSaveProfile = async () => {
+    if (!user?.userId) return;
+    setSaveStatus({ type: '', message: '' });
+    try {
+      const payload = {
+        name: `${userData.firstName} ${userData.lastName}`.trim(),
+        phone: userData.phone,
+        bio: userData.bio,
+        location: userData.location,
+        instagram: userData.instagram,
+        website: userData.website,
+      };
+      const res = await fetch(`/api/users/${user.userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to save profile');
+      }
+      // Reflect saved values
+      const fullName = data.data.name || '';
+      const parts = fullName.trim().split(' ');
+      const first = parts.shift() || '';
+      const last = parts.join(' ');
+      setUserData((prev) => ({
+        ...prev,
+        firstName: first,
+        lastName: last,
+        phone: data.data.phone || '',
+        bio: data.data.bio || '',
+        location: data.data.location || '',
+        instagram: data.data.instagram || '',
+        website: data.data.website || '',
+      }));
+      setIsEditing(false);
+      setSaveStatus({ type: 'success', message: 'Profile updated successfully.' });
+    } catch (e) {
+      console.error(e);
+      setSaveStatus({ type: 'error', message: e.message || 'Unable to save profile.' });
+    }
+  };
 
   return (
     <div style={{ 
@@ -276,7 +391,7 @@ export default function MyAccountPage() {
           <Button 
             variant="ghost" 
             className="text-[#CBBD93] hover:bg-[#BEAD73]/10 transition-colors duration-200" 
-            onClick={() => { /* sign out */ }}
+            onClick={handleLogout}
           >
             <LogIn className="mr-1.5 h-4 w-4 opacity-80" strokeWidth={1.5} />
             Sign Out
@@ -299,6 +414,24 @@ export default function MyAccountPage() {
 
       {/* Main Content */}
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '48px 32px' }}>
+        {saveStatus.message && (
+          <div style={{
+            marginBottom: '16px',
+            padding: '10px 14px',
+            borderRadius: 8,
+            border: `1px solid ${saveStatus.type === 'success' ? 'rgba(125, 200, 125, 0.4)' : 'rgba(255, 120, 120, 0.4)'}`,
+            background: saveStatus.type === 'success' ? 'rgba(40, 180, 110, 0.15)' : 'rgba(255, 80, 80, 0.12)',
+            color: saveStatus.type === 'success' ? '#b4f6d2' : '#ffd2d2'
+          }}>
+            {saveStatus.message}
+          </div>
+        )}
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '80px 20px', color: '#CBBD93' }}>
+            <div style={{ fontSize: '18px', opacity: 0.7 }}>Loading your account...</div>
+          </div>
+        ) : (
+          <>
         {/* Profile Header */}
         <div style={{
           background: 'linear-gradient(135deg, rgba(10, 25, 47, 0.35) 0%, rgba(10, 25, 47, 0.18) 100%)',
@@ -335,7 +468,7 @@ export default function MyAccountPage() {
               border: '4px solid rgba(190, 161, 115, 0.18)',
               boxShadow: '0 10px 36px rgba(190, 161, 115, 0.14)'
             }}>
-              {userData.firstName[0]}{userData.lastName[0]}
+              {userData.firstName && userData.lastName ? `${userData.firstName[0]}${userData.lastName[0]}` : 'U'}
             </div>
             
             <div style={{ flex: 1 }}>
@@ -488,7 +621,7 @@ export default function MyAccountPage() {
                 ) : (
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
-                    <Button className="bg-[#BEA173] text-[#001026]" onClick={() => setIsEditing(false)}>Save Changes</Button>
+                    <Button className="bg-[#BEA173] text-[#001026]" onClick={handleSaveProfile}>Save Changes</Button>
                   </div>
                 )}
               </div>
@@ -570,9 +703,33 @@ export default function MyAccountPage() {
               }}>
                 My Favorite Artworks
               </h2>
+              {artworksLoading ? (
+                <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(203, 189, 147, 0.6)' }}>
+                  Loading favorites...
+                </div>
+              ) : favorites.length === 0 ? (
+                <div style={{ 
+                  textAlign: 'center', 
+                  padding: '80px 20px',
+                  background: 'rgba(10, 25, 47, 0.28)',
+                  border: '1px solid rgba(190, 161, 115, 0.12)',
+                  borderRadius: '12px'
+                }}>
+                  <Heart className="h-12 w-12 mx-auto mb-4 opacity-30" strokeWidth={1.5} style={{ color: '#CBBD93' }} />
+                  <p style={{ color: 'rgba(203, 189, 147, 0.6)', fontSize: '16px' }}>
+                    You haven't favorited any artworks yet.
+                  </p>
+                  <Button 
+                    className="mt-4 bg-[#BEA173] text-[#001026]"
+                    onClick={() => router.push('/catalog')}
+                  >
+                    Explore Artworks
+                  </Button>
+                </div>
+              ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
                 {favorites.map((artwork) => (
-                  <div key={artwork.id} className="card-artwork" style={{
+                  <div key={artwork._id || artwork.id} className="card-artwork" style={{
                     background: 'rgba(10, 25, 47, 0.28)',
                     border: '1px solid rgba(190, 161, 115, 0.12)',
                     borderRadius: '12px',
@@ -580,7 +737,7 @@ export default function MyAccountPage() {
                   }}>
                     <div style={{ position: 'relative', overflow: 'hidden' }}>
                       <img 
-                        src={artwork.image}
+                        src={artwork.imageUrl || artwork.image || '/images/placeholder.jpg'}
                         alt={artwork.title}
                         style={{
                           width: '100%',
@@ -601,12 +758,13 @@ export default function MyAccountPage() {
                         {artwork.title}
                       </h3>
                       <p style={{ color: 'rgba(203, 189, 147, 0.7)', margin: 0, fontSize: '13px' }}>
-                        by {artwork.artist}
+                        by {artwork.artist || artwork.artistId?.name || 'Unknown Artist'}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
+              )}
             </div>
           )}
 
@@ -634,7 +792,7 @@ export default function MyAccountPage() {
                 ) : (
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
-                    <Button className="bg-[#BEA173] text-[#001026]" onClick={() => setIsEditing(false)}>Save Changes</Button>
+                    <Button className="bg-[#BEA173] text-[#001026]" onClick={handleSaveProfile}>Save Changes</Button>
                   </div>
                 )}
               </div>
@@ -709,16 +867,39 @@ export default function MyAccountPage() {
                 </h2>
                 <Button 
                   className="bg-[#BEA173] text-[#001026] hover:bg-[#CBBD93] transition-colors duration-200" 
-                  onClick={() => { /* upload */ }}
+                  onClick={() => router.push('/submit')}
                 >
                   <Upload className="mr-2 h-4 w-4 opacity-90" strokeWidth={2} />
                   Upload New Artwork
                 </Button>
               </div>
               
+              {artworksLoading ? (
+                <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(203, 189, 147, 0.6)' }}>
+                  Loading your artworks...
+                </div>
+              ) : artworks.length === 0 ? (
+                <div style={{ 
+                  textAlign: 'center', 
+                  padding: '80px 20px',
+                  background: 'rgba(10, 25, 47, 0.28)',
+                  border: '1px solid rgba(190, 161, 115, 0.12)',
+                  borderRadius: '12px'
+                }}>
+                  <p style={{ color: 'rgba(203, 189, 147, 0.6)', fontSize: '16px' }}>
+                    You haven't submitted any artworks yet.
+                  </p>
+                  <Button 
+                    className="mt-4 bg-[#BEA173] text-[#001026]"
+                    onClick={() => router.push('/submit')}
+                  >
+                    Submit Your First Artwork
+                  </Button>
+                </div>
+              ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
                 {artworks.map((artwork) => (
-                  <div key={artwork.id} className="card-artwork" style={{
+                  <div key={artwork._id || artwork.id} className="card-artwork" style={{
                     background: 'rgba(10, 25, 47, 0.28)',
                     border: '1px solid rgba(190, 161, 115, 0.12)',
                     borderRadius: '12px',
@@ -726,7 +907,7 @@ export default function MyAccountPage() {
                   }}>
                     <div style={{ position: 'relative' }}>
                       <img 
-                        src={artwork.image}
+                        src={artwork.imageUrl || artwork.image || '/images/placeholder.jpg'}
                         alt={artwork.title}
                         style={{
                           width: '100%',
@@ -774,6 +955,7 @@ export default function MyAccountPage() {
                   </div>
                 ))}
               </div>
+              )}
             </div>
           )}
 
@@ -858,6 +1040,8 @@ export default function MyAccountPage() {
             </div>
           )}
         </div>
+        </>
+        )}
       </div>
     </div>
   );
