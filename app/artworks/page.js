@@ -113,43 +113,285 @@ export default function CatalogPage() {
       position: 'relative'
     }}>
 
-      {/* Header (keeps same palette as landing) */}
-      <nav className="d-flex align-items-center justify-content-between" style={{
-        background: 'rgba(203, 189, 147, 0.05)',
+     {/* Header */}
+      <nav className="d-flex align-items-center justify-content-between px-5" style={{
+        zoom: '0.75',
+        background: '#0A192B',
         backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(203, 189, 147, 0.2)',
-        height: '100px',
-        padding: '0 1rem'
+        borderBottom: '1px solid rgba(203, 189, 147, 0.15)',
+        height: '140px',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000
       }}>
         <div className="d-flex align-items-center">
           <img 
             src="/images/logo.png" 
             alt="Galerium" 
-            onClick={() => router.push('/catalog')}
-            style={{ height: '70px', width: '120px', objectFit: 'contain', cursor: 'pointer', filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)' }} 
+            onClick={() => router.push('/')}
+            style={{
+              height: '2500px',
+              width: '350px',
+              objectFit: 'contain',
+              filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)',
+              cursor: 'pointer',
+              transition: 'transform 0.3s ease'
+            }}
+            onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+            onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
           />
         </div>
+        {/* Nav Links + Search */}
+<div className="d-flex align-items-center gap-4">
+  {/* Home */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '1200px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="home"
+    className="nav-link"
+  >
+    <i className="fas fa-home" style={{ fontSize: '20px' }}></i>
+    Home
+  </a>
 
-        {/* Protected navigation */}
-        <div className="d-none d-md-flex align-items-center gap-4" style={{ color: '#cbbd93' }}>
-          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/catalog')}>Catalog</a>
-          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/artists')}>Artists</a>
-          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/style')}>Explore</a>
-          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/featured')}>Featured</a>
-          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/search')}>Search</a>
-          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/myaccount')}>My Account</a>
+  {/* Artworks */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '1050px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="artworks"
+    className="nav-link"
+  >
+    <i className="fas fa-palette" style={{ fontSize: '20px' }}></i>
+    Artworks
+  </a>
+
+  {/* Artists */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '925px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="artists"
+    className="nav-link"
+  >
+    <i className="fas fa-user" style={{ fontSize: '20px' }}></i>
+    Artists
+  </a>
+
+  {/* About */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '820px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="aboutus"
+    className="nav-link"
+  >
+    <i className="fas fa-info-circle" style={{ fontSize: '20px' }}></i>
+    About
+  </a>
+
+
+    {/* Search Bar */}
+    <div style={{ position: 'absolute', top: '110px' , right:'850px' ,transform: 'translateY(-80%)'}}>
+      <input 
+        type="text" 
+        placeholder="          Search for a specific painting" 
+        style={{
+          padding: '8px 32px 8px 12px',
+          borderRadius: '60px',
+          fontSize:'22px',
+          border: '1.5px solid #BEA173',
+          outline: 'none',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          color: '#fff',
+          width: '400px'
+        }}
+      />
+      <i className="fas fa-search" style={{
+        fontSize: '25px',
+        position: 'absolute',
+        right: '360px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        color: '#BEA173'
+      }}></i>
+    </div>
+  </div>
+
+        <div className="d-flex align-items-center gap-4">
+          {user && ['artist','admin'].includes(user.role) && (
+            <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
+          )}
+
         </div>
 
-        <div className="d-flex align-items-center gap-3">
-          {user && ['artist','admin'].includes(user.role) && (
-            <button className="btn" onClick={() => router.push('/submit')} style={{ borderRadius: 6, padding: '6px 12px', border: '2px solid #cbbd93', color: '#cbbd93', backgroundColor: 'transparent', marginRight: 8 }}>Submit Artwork</button>
-          )}
-          {user && (
-            <button className="btn" onClick={handleLogout} style={{ borderRadius: 6, padding: '6px 12px', backgroundColor: '#cbbd93', color: '#001026', border: 'none' }}>Logout</button>
-          )}
+        <div className="d-flex align-items-center gap-2">
+          <button
+            className="btn btn-hover-effect"
+            onClick={() => router.push('/myaccount')}
+            style={{
+              borderRadius: '12px',
+              padding: '8px 18px',
+              border: '1.5px solid #BEA173',
+              backgroundColor: '#BEA173',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              fontWeight: '400',
+              color: '#001026',
+              fontSize: '18px',
+              letterSpacing: '0.5px',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#cbbd93';
+              e.currentTarget.style.color = '#001026';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#BEA173';
+            }}
+          >
+            <span
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'transparent'
+              }}
+            >
+              <i className="fas fa-user" style={{ color: '#001026', fontSize: '16px' }}></i>
+            </span>
+            <span style={{ display: 'inline-block' }}>My Account</span>
+            
+          </button>
+          <button
+            className="btn btn-hover-effect"
+            onClick={() => router.push('/signup')}
+            style={{
+              borderRadius: '12px',
+              padding: '8px 18px',
+              border: '1.5px solid #BEA173',
+              backgroundColor: 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              fontWeight: '300',
+              color: '#BEA173',
+              fontSize: '18px',
+              letterSpacing: '0.5px',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#cbbd93';
+              e.currentTarget.style.color = '#001026';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#BEA173';
+            }}
+          >
+            <span
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'transparent'
+              }}
+            >
+              <i className="fas fa-user-plus" style={{ color: '#BEA173', fontSize: '16px' }}></i>
+            </span>
+            <span style={{ display: 'inline-block' }}>Sign Up</span>
+            
+          </button>
+          <button
+            className="btn btn-hover-effect"
+            onClick={() => router.push('/login')}
+            style={{
+              borderRadius: '12px',
+              padding: '8px 18px',
+              border: '1.5px solid #BEA173',
+              backgroundColor: 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              fontWeight: '300',
+              color: '#BEA173',
+              fontSize: '18px',
+              letterSpacing: '0.5px',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#cbbd93';
+              e.currentTarget.style.color = '#001026';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#BEA173';
+            }}
+          >
+            <span
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'transparent'
+              }}
+            >
+              <i className="fas fa-sign-in-alt" style={{ color: '#BEA173', fontSize: '16px' }}></i>
+            </span>
+            <span style={{ display: 'inline-block' }}>login</span>
+            
+          </button>
+          
         </div>
       </nav>
-
       <main style={{ padding: '2rem', maxWidth: 1200, margin: '0 auto' }}>
         <h1 style={{ color: '#fffafa', marginBottom: '0.25rem' }}>Catalog</h1>
         <p style={{ color: 'rgba(203, 189, 147, 0.9)', marginTop: 0, marginBottom: '1.25rem' }}>Browse all paintings in our collection.</p>

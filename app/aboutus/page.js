@@ -98,8 +98,9 @@ export default function AboutPage() {
         zIndex: 0
       }}></div>
 
-      {/* Header */}
+{/* Header */}
       <nav className="d-flex align-items-center justify-content-between px-5" style={{
+        zoom: '0.75',
         background: '#0A192B',
         backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(203, 189, 147, 0.15)',
@@ -114,8 +115,8 @@ export default function AboutPage() {
             alt="Galerium" 
             onClick={() => router.push('/')}
             style={{
-              height: '120px',
-              width: 'auto',
+              height: '2500px',
+              width: '350px',
               objectFit: 'contain',
               filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)',
               cursor: 'pointer',
@@ -125,122 +126,125 @@ export default function AboutPage() {
             onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
           />
         </div>
-
         {/* Nav Links + Search */}
+<div className="d-flex align-items-center gap-4">
+  {/* Home */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '1200px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="home"
+    className="nav-link"
+  >
+    <i className="fas fa-home" style={{ fontSize: '20px' }}></i>
+    Home
+  </a>
+
+  {/* Artworks */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '1050px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="artworks"
+    className="nav-link"
+  >
+    <i className="fas fa-palette" style={{ fontSize: '20px' }}></i>
+    Artworks
+  </a>
+
+  {/* Artists */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '925px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="artists"
+    className="nav-link"
+  >
+    <i className="fas fa-user" style={{ fontSize: '20px' }}></i>
+    Artists
+  </a>
+
+  {/* About */}
+  <a 
+    style={{
+      position: 'absolute',
+      bottom: '70px',
+      right: '820px',
+      transform: 'translateY(-80%)',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    href="aboutus"
+    className="nav-link"
+  >
+    <i className="fas fa-info-circle" style={{ fontSize: '20px' }}></i>
+    About
+  </a>
+
+
+    {/* Search Bar */}
+    <div style={{ position: 'absolute', top: '110px' , right:'850px' ,transform: 'translateY(-80%)'}}>
+      <input 
+        type="text" 
+        placeholder="          Search for a specific painting" 
+        style={{
+          padding: '8px 32px 8px 12px',
+          borderRadius: '60px',
+          fontSize:'22px',
+          border: '1.5px solid #BEA173',
+          outline: 'none',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          color: '#fff',
+          width: '400px'
+        }}
+      />
+      <i className="fas fa-search" style={{
+        fontSize: '25px',
+        position: 'absolute',
+        right: '360px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        color: '#BEA173'
+      }}></i>
+    </div>
+  </div>
+
         <div className="d-flex align-items-center gap-4">
-          <a 
-            style={{
-              position: 'absolute',
-              bottom: '70px',
-              right: '1200px',
-              transform: 'translateY(-80%)',
-              fontSize: '20px',
-              fontWeight: '350',
-              color: '#BEA173',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-            href="/"
-            className="nav-link"
-          >
-            <i className="fas fa-home" style={{ fontSize: '20px' }}></i>
-            Home
-          </a>
-
-          <a 
-            style={{
-              position: 'absolute',
-              bottom: '70px',
-              right: '1050px',
-              transform: 'translateY(-80%)',
-              fontSize: '20px',
-              fontWeight: '350',
-              color: '#BEA173',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-            href="/artworks"
-            className="nav-link"
-          >
-            <i className="fas fa-palette" style={{ fontSize: '20px' }}></i>
-            Artworks
-          </a>
-
-          <a 
-            style={{
-              position: 'absolute',
-              bottom: '70px',
-              right: '925px',
-              transform: 'translateY(-80%)',
-              fontSize: '20px',
-              fontWeight: '350',
-              color: '#BEA173',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-            href="/artists"
-            className="nav-link"
-          >
-            <i className="fas fa-user" style={{ fontSize: '20px' }}></i>
-            Artists
-          </a>
-
-          <a 
-            style={{
-              position: 'absolute',
-              bottom: '70px',
-              right: '820px',
-              transform: 'translateY(-80%)',
-              fontSize: '20px',
-              fontWeight: '350',
-              color: '#BEA173',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-            href="/aboutus"
-            className="nav-link"
-          >
-            <i className="fas fa-info-circle" style={{ fontSize: '20px' }}></i>
-            About
-          </a>
-
-          {/* Search Bar */}
-          <div style={{ position: 'absolute', top: '110px', right: '850px', transform: 'translateY(-80%)' }}>
-            <input 
-              type="text" 
-              placeholder="Search for a specific painting" 
-              style={{
-                padding: '8px 32px 8px 40px',
-                borderRadius: '60px',
-                fontSize: '16px',
-                border: '1.5px solid #BEA173',
-                outline: 'none',
-                backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                color: '#fff',
-                width: '400px'
-              }}
-            />
-            <i className="fas fa-search" style={{
-              fontSize: '16px',
-              position: 'absolute',
-              left: '15px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: '#BEA173'
-            }}></i>
-          </div>
-        </div>
-
-        <div className="d-flex align-items-center gap-4">
-          {user && ['artist', 'admin'].includes(user.role) && (
-            <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>
-              Submit Artwork
-            </a>
+          {user && ['artist','admin'].includes(user.role) && (
+            <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
           )}
+
         </div>
 
         <div className="d-flex align-items-center gap-2">
@@ -266,24 +270,26 @@ export default function AboutPage() {
               e.currentTarget.style.color = '#001026';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#BEA173';
-              e.currentTarget.style.color = '#001026';
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#BEA173';
             }}
           >
-            <span style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '8px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'transparent'
-            }}>
+            <span
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'transparent'
+              }}
+            >
               <i className="fas fa-user" style={{ color: '#001026', fontSize: '16px' }}></i>
             </span>
-            <span>My Account</span>
+            <span style={{ display: 'inline-block' }}>My Account</span>
+            
           </button>
-
           <button
             className="btn btn-hover-effect"
             onClick={() => router.push('/signup')}
@@ -310,20 +316,22 @@ export default function AboutPage() {
               e.currentTarget.style.color = '#BEA173';
             }}
           >
-            <span style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '8px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'transparent'
-            }}>
+            <span
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'transparent'
+              }}
+            >
               <i className="fas fa-user-plus" style={{ color: '#BEA173', fontSize: '16px' }}></i>
             </span>
-            <span>Sign Up</span>
+            <span style={{ display: 'inline-block' }}>Sign Up</span>
+            
           </button>
-
           <button
             className="btn btn-hover-effect"
             onClick={() => router.push('/login')}
@@ -350,19 +358,23 @@ export default function AboutPage() {
               e.currentTarget.style.color = '#BEA173';
             }}
           >
-            <span style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '8px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'transparent'
-            }}>
+            <span
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'transparent'
+              }}
+            >
               <i className="fas fa-sign-in-alt" style={{ color: '#BEA173', fontSize: '16px' }}></i>
             </span>
-            <span>Login</span>
+            <span style={{ display: 'inline-block' }}>login</span>
+            
           </button>
+          
         </div>
       </nav>
 
@@ -572,7 +584,7 @@ export default function AboutPage() {
             animationDelay: '1.2s'
           }}>
             <button
-              onClick={() => alert('Thank you for your interest! Our team will be in touch soon.\n\nEmail: contact@galerium.tn\nPhone: +216 XX XXX XXX')}
+              onClick={() => router.push('/ourteam')}
               style={{
                 borderRadius: '8px',
                 padding: '12px 32px',
@@ -608,13 +620,14 @@ export default function AboutPage() {
       </main>
 
       {/* Footer */}
+   {/* Footer */}
       <footer style={{
+        zoom: '0.75',
         background: '#0A192B',
         borderTop: '1px solid rgba(203,189,147,0.08)',
         color: '#cbbd93',
         padding: '40px 2rem',
-        position: 'relative',
-        zIndex: 1
+        position: 'relative'
       }}>
         <div style={{
           maxWidth: '1300px',
@@ -624,41 +637,21 @@ export default function AboutPage() {
           justifyContent: 'space-between',
           gap: '12px'
         }}>
-          <div style={{ 
-            fontSize: '1.1rem', 
-            color: 'rgba(255, 255, 255, 0.95)'
-          }}>
-            © 2025 galerium. All rights reserved.
-          </div>
+          {/* Left: logo + copyright */}
+            <div style={{ fontSize: '1.1rem', color: 'rgba(255, 255, 255, 0.95)',position: 'absolute', bottom:'10px' , left: '50px'}}>© 2025 galerium. All rights reserved.</div>
 
+          {/* Center: nav links */}
           <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-            <a href="#explore" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem' }}>
-              Explore More
-            </a>
-            <a href="#view" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem' }}>
-              View Details
-            </a>
-            <a href="#learn" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem' }}>
-              Learn More
-            </a>
+            <a href="#" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem', position: 'absolute', bottom:'40px' ,right:'1200px'  }}>Explore More</a>
+            <a href="#" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem',position: 'absolute', bottom:'40px' ,right:'1000px' }}>View Details</a>
+            <a href="#" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem',position: 'absolute', bottom:'40px' ,right:'800px' }}>Learn More</a>
           </div>
 
+          {/* Right: legal links */}
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <a href="/privacy" style={{ 
-              color: 'rgba(255, 255, 255, 0.85)', 
-              textDecoration: 'none', 
-              fontSize: '1.1rem' 
-            }}>
-              Privacy Policy
-            </a>
-            <span style={{ color: 'rgba(203,189,147,0.45)' }}>|</span>
-            <a href="/terms" style={{ 
-              color: 'rgba(255, 255, 255, 0.85)', 
-              textDecoration: 'none', 
-              fontSize: '1.1rem' 
-            }}>
-              Terms of Use
-            </a>
+            <a href="/privacy" style={{ color: 'rgba(255, 255, 255, 0.85)', textDecoration: 'none', fontSize: '1.1rem',position: 'absolute', bottom:'10px' , right: '200px' }}>Privacy Policy</a>
+            <span style={{ color: 'rgba(203,189,147,0.45)',position: 'absolute', bottom:'10px' , right: '180px' }}>|</span>
+            <a href="/terms" style={{ color: 'rgba(255, 255, 255, 0.85)', textDecoration: 'none', fontSize: '1.1rem',position: 'absolute', bottom:'10px' , right: '70px' }}>Terms of Use</a>
           </div>
         </div>
       </footer>

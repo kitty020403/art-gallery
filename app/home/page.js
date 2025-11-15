@@ -32,6 +32,7 @@ export default function LandingPage() {
       year: '2020',
       description: '"The white of the walls, the blue of the doors, the suspended flowers and the scent of jasmine in the wind."',
       image: '/images/6.png',
+      artistImage: '/images/ismail.jpg',
     },
     {
       id: 2,
@@ -39,15 +40,17 @@ export default function LandingPage() {
       artist: 'Amina Ben Salem',
       year: '2019',
       description: 'Un hommage vibrant à la culture tunisienne contemporaine.',
-      image: '/images/6.png',
+      image: '/images/p3.jpg',
+      artistImage: '/images/image3.png',
     },
     {
       id: 3,
-      title: 'Horizons Méditerranéens',
-      artist: 'Nidhal Chamekh',
+      title: 'Camel',
+      artist: 'sonia sassi',
       year: '2021',
-      description: 'Entre mémoire et modernité, un voyage à travers les identités.',
+      description: 'C’est dans nos origines que naît notre admiration pour une beauté si pure et vierge.',
       image: '/images/7.jpg',
+      artistImage: '/images/image4.png',
     },
     {
       id: 4,
@@ -56,22 +59,25 @@ export default function LandingPage() {
       year: '2021',
       description: 'Entre mémoire et modernité, un voyage à travers les identités.',
       image: '/images/111.jpg',
+      artistImage: '/images/jaber.jpg',
     },
     {
       id: 5,
-      title: 'Horizons Méditerranéens',
-      artist: 'Nidhal Chamekh',
+      title: 'Safsari',
+      artist: 'Hedi Tlili',
       year: '2021',
-      description: 'Entre mémoire et modernité, un voyage à travers les identités.',
+      description: '« Dans le souffle de nos origines, se révèle la pureté d’une beauté immaculée. »',
       image: '/images/123.jpg',
+      artistImage: '/images/image.png',
     },
     {
       id: 6,
-      title: 'Horizons Méditerranéens',
-      artist: 'Nidhal Chamekh',
+      title: 'la beauté éternelle',
+      artist: 'sadok hassasi',
       year: '2021',
-      description: 'Entre mémoire et modernité, un voyage à travers les identités.',
+      description: 'le charme intemporel de la pureté et de la simplicité',
       image: '/images/122.jpg',
+      artistImage: '/images/profile.jpg',
     },
     
   ];
@@ -647,13 +653,13 @@ export default function LandingPage() {
                         rotateY(${rotateY}deg)
                         scale(${isActive ? 1.1 : 0.8})
                       `,
-                      opacity: isActive ? 1 : 0.5,
+                      opacity: isActive ? 1 : 0.6,
                       transition: 'all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)',
                       zIndex: isActive ? 100 : 50 - Math.abs(position),
                       width: '400px',
                       backgroundColor: 'rgba(255, 255, 255, 0.3)',
                       borderRadius: '20px',
-                      backdropFilter: 'blur(6px)',
+                      backdropFilter: 'blur(15px)',
                       border: '2px solid rgba(203, 189, 147, 0.3)',
                       boxShadow: isActive 
                         ? '0 30px 60px -15px rgba(0, 0, 0, 0.6)' 
@@ -680,12 +686,12 @@ export default function LandingPage() {
                       color: '#cbbd93',
                       textAlign: 'left',
                       borderRadius: '0 0 20px 20px',
-                      backdropFilter: 'blur(5px)'
+                      backdropFilter: 'blur(10px)'
                     }}>
                       <h3 style={{ 
                         color: '#001026', 
-                        fontWeight: '500',
-                        fontSize: '1.25rem',
+                        fontWeight: '600',
+                        fontSize: '1.30rem',
                         marginBottom: '8px',
                         fontFamily: "'Playfair Display', serif",
                         letterSpacing: '0.5px'
@@ -694,7 +700,7 @@ export default function LandingPage() {
                         color: '#001026', 
                         fontSize: '0.95rem',
                         marginBottom: '8px',
-                        fontWeight: '400'
+                        fontWeight: '450'
                       }}>{artwork.artist}, {artwork.year}</p>
                       <p style={{ 
                         color: '#001026',
@@ -702,7 +708,7 @@ export default function LandingPage() {
                         fontSize: '0.88rem',
                         lineHeight: '1.5',
                         margin: 0,
-                        fontWeight: '300'
+                        fontWeight: '400'
                       }}>
                         &quot;{artwork.description}&quot;
                       </p>
@@ -749,11 +755,17 @@ export default function LandingPage() {
                   <i className="fas fa-chevron-left"></i>
                 </button>
 
-                <img
-                  src="/images/ismail.jpg"
-                  alt="Artist avatar"
-                  style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(255,255,255,0.06)' }}
-                />
+               <img
+  src={artworks[currentSlide].artistImage}
+  alt={artworks[currentSlide].artist}
+  style={{
+    width: '60px',
+    height: '60px',
+    borderRadius: '50%',
+    objectFit: 'cover',
+    border: '2px solid rgba(255,255,255,0.06)'
+  }}
+/>
 
                <div style={{ color: '#ffffff', textAlign: 'left' }}>
   <div style={{ color: '#cbbd93', fontSize: '0.98rem', fontWeight: 600 }}>{artworks[currentSlide].artist}</div>

@@ -39,7 +39,7 @@ export default function SignupPage() {
         localStorage.setItem('user', JSON.stringify(data.data.user));
         
         // Redirect to catalog
-        router.push('/catalog');
+        router.push('/artworks');
       } else {
         setError(data.error || 'Registration failed');
         setIsLoading(false);
