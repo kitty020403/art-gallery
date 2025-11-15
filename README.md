@@ -48,8 +48,4 @@ npm run dev
 - `http://localhost:3000/api/artworks`
 - `http://localhost:3000/api/artists`
 
-### Emballer le livrable
-
- Fournir un lien GitHub :
-- Pousser le code sur un dépôt GitHub et partager le lien.
 
