@@ -51,10 +51,5 @@ npm run dev
 ### Emballer le livrable
 
  Fournir un lien GitHub :
-- Pousser le code sur un dépôt GitHub et partager le lien (format recommandé).
-
-```powershell
-# depuis la racine du projet (supprimez node_modules si vous voulez réduire la taille)
-Compress-Archive -Path .\* -DestinationPath ..\art-gallery-deliverable.zip -Force
-```
+- Pousser le code sur un dépôt GitHub et partager le lien.
 
