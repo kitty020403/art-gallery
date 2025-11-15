@@ -9,7 +9,7 @@ export async function GET(request, context) {
     await connectDB();
     const { id } = await context.params;
 
-    const user = await User.findById(id).select('name role createdAt');
+    const user = await User.findById(id).select('name role createdAt phone bio location instagram website');
     if (!user) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
@@ -21,7 +21,9 @@ export async function GET(request, context) {
   }
 }
 
-// PUT /api/users/:id - Update user role (admin only)
+// PUT /api/users/:id
+// - If the authenticated user updates their own profile, allow updating allowed profile fields
+// - If updating another user, only admins can update role
 export async function PUT(request, context) {
   try {
     await connectDB();
@@ -41,39 +43,60 @@ export async function PUT(request, context) {
       return NextResponse.json({ success: false, error: 'Invalid token' }, { status: 401 });
     }
 
+    const body = await request.json();
+
+    // Self-update: allow safe profile fields only
+    if (id === decoded.userId) {
+      const allowedFields = ['name', 'phone', 'bio', 'location', 'instagram', 'website'];
+      const update = {};
+      for (const key of allowedFields) {
+        if (Object.prototype.hasOwnProperty.call(body, key)) {
+          update[key] = body[key];
+        }
+      }
+
+      // Don't allow empty update
+      if (Object.keys(update).length === 0) {
+        return NextResponse.json({ success: false, error: 'No valid fields to update' }, { status: 400 });
+      }
+
+      const updated = await User.findByIdAndUpdate(
+        id,
+        update,
+        { new: true, runValidators: true }
+      ).select('-password');
+
+      if (!updated) {
+        return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
+      }
+
+      return NextResponse.json({ success: true, data: updated });
+    }
+
+    // Otherwise, require admin to update role for others
     const currentUser = await User.findById(decoded.userId);
     if (!currentUser || currentUser.role !== 'admin') {
       return NextResponse.json({ success: false, error: 'Admin access required' }, { status: 403 });
     }
 
-    // Parse request body
-    const body = await request.json();
     const { role } = body;
-
-    // Validate role
     if (!role || !['user', 'artist', 'admin'].includes(role)) {
       return NextResponse.json({ success: false, error: 'Invalid role. Must be user, artist, or admin.' }, { status: 400 });
     }
 
-    // Prevent self-demotion from admin
-    if (id === decoded.userId && role !== 'admin') {
-      return NextResponse.json({ success: false, error: 'Cannot change your own admin role' }, { status: 400 });
-    }
-
-    // Update user
-    const user = await User.findByIdAndUpdate(
+    const updatedRoleUser = await User.findByIdAndUpdate(
       id,
       { role },
       { new: true, runValidators: true }
     ).select('-password');
 
-    if (!user) {
+    if (!updatedRoleUser) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, data: user });
+    return NextResponse.json({ success: true, data: updatedRoleUser });
   } catch (error) {
     console.error('Error updating user role:', error);
-    return NextResponse.json({ success: false, error: 'Failed to update user role' }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Failed to update user' }, { status: 500 });
   }
 }

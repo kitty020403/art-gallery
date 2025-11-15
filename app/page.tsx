@@ -1,25 +1,12 @@
-'use client';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-
-export default function Home() {
-  const router = useRouter();
-  
-  useEffect(() => {
-    router.push('/landingpage');
-  }, [router]);
-
-  return (
-    <div style={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      backgroundColor: '#001026',
-      color: '#cbbd93'
-    }}>
-      <p>Loading...</p>
-    </div>
-  );
+export default async function Home() {
+  // Server component: decide the landing based on presence of auth token
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value;
+  if (token) {
+    redirect('/catalog');
+  }
+  redirect('/landingpage');
 }

@@ -42,6 +42,13 @@ export default function CatalogPage() {
     checkAuth();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch {}
+    router.push('/login');
+  };
+
   const fetchStats = async (artworkId) => {
     try {
       const res = await fetch(`/api/interactions/stats/${artworkId}`);
@@ -111,19 +118,35 @@ export default function CatalogPage() {
         background: 'rgba(203, 189, 147, 0.05)',
         backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(203, 189, 147, 0.2)',
-        height: '120px',
+        height: '100px',
         padding: '0 1rem'
       }}>
         <div className="d-flex align-items-center">
-          <img src="/images/logo.png" alt="Galerium" style={{ height: '100px', width: '100px', objectFit: 'contain', filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)' }} />
+          <img 
+            src="/images/logo.png" 
+            alt="Galerium" 
+            onClick={() => router.push('/catalog')}
+            style={{ height: '70px', width: '120px', objectFit: 'contain', cursor: 'pointer', filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)' }} 
+          />
+        </div>
+
+        {/* Protected navigation */}
+        <div className="d-none d-md-flex align-items-center gap-4" style={{ color: '#cbbd93' }}>
+          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/catalog')}>Catalog</a>
+          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/artists')}>Artists</a>
+          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/style')}>Explore</a>
+          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/featured')}>Featured</a>
+          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/search')}>Search</a>
+          <a className="nav-link" style={{ cursor: 'pointer', color: '#cbbd93', textDecoration: 'none', opacity: 0.9 }} onClick={() => router.push('/myaccount')}>My Account</a>
         </div>
 
         <div className="d-flex align-items-center gap-3">
           {user && ['artist','admin'].includes(user.role) && (
             <button className="btn" onClick={() => router.push('/submit')} style={{ borderRadius: 6, padding: '6px 12px', border: '2px solid #cbbd93', color: '#cbbd93', backgroundColor: 'transparent', marginRight: 8 }}>Submit Artwork</button>
           )}
-          <button className="btn" onClick={() => router.push('/login')} style={{ borderRadius: 6, padding: '6px 12px', border: '2px solid #cbbd93', color: '#cbbd93', backgroundColor: 'transparent', marginRight: 8 }}>Login</button>
-          <button className="btn" onClick={() => router.push('/signup')} style={{ borderRadius: 6, padding: '6px 12px', backgroundColor: '#e0c1a2ff', color: '#fff', border: 'none' }}>Register</button>
+          {user && (
+            <button className="btn" onClick={handleLogout} style={{ borderRadius: 6, padding: '6px 12px', backgroundColor: '#cbbd93', color: '#001026', border: 'none' }}>Logout</button>
+          )}
         </div>
       </nav>
 

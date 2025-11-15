@@ -14,20 +14,11 @@
     "@fortawesome/fontawesome-free": "^7.1.0",
     "bcryptjs": "^3.0.3",
     "bootstrap": "^5.3.8",
-<<<<<<< HEAD
     "dotenv": "^17.2.3",
+    "jose": "^6.1.1",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.553.0",
     "mongoose": "^8.19.3",
-=======
-
-    "dotenv": "^17.2.3",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.19.3",
-
-    "lucide-react": "^0.553.0",
-
->>>>>>> 506ccb8115634de8e56b9eb3030cb668ee1a694a
     "next": "16.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0"
@@ -43,4 +34,3 @@
     "typescript": "^5"
   }
 }
-
