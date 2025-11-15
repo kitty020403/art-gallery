@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+### Choix du framework
 
-First, run the development server:
+notre projet  utilise **Next.js** (App Router). 
+Raisons principales : 
+   rendu côté serveur ou statique si nécessaire, 
+   routage intégré,
+   routes API directement dans le projet, 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Fonctionnalités développées
+
+- Pages dynamiques principales  :
+	- `app/home/page.js` — page d'accueil avec carousel et actions.
+	- `app/artists/page.js` — listing d'artistes.
+	- `app/catalog/page.js` — catalogue d'œuvres.
+	- `app/users/[id]/page.js` — profils utilisateurs dynamiques.
+
+- Backend/API minimal :
+	- Routes API dans `app/api/` pour `artists`, `artworks`, `users`, `auth`, et `interactions`.
+	- Modèles Mongoose dans `models/` (`Artist.js`, `Artwork.js`, `User.js`, `Interaction.js`).
+	- Connexion MongoDB gérée par `lib/mongodb.js`.
+
+### Étapes de lancement (local)
+
+1. Installer les dépendances :
+
+```powershell
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Créer le fichier d'environnement (`.env.local`) à la racine et ajouter les variables nécessaires (ex. `MONGODB_URI`), p. ex. :
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+MONGODB_URI="mongodb+srv://linamrad02_db_user:6VgmBQdevLHtwd8v@cluster1.ow9rplb.mongodb.net/art-gallery?retryWrites=true&w=majority"
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+```
 
-To learn more about Next.js, take a look at the following resources:
+3. Lancer le serveur de développement :
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```powershell
+npm run dev
+# Ouvrir http://localhost:3000/home
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Vérifier les endpoints API (exemples) :
 
-## Deploy on Vercel
+- `http://localhost:3000/api/artworks`
+- `http://localhost:3000/api/artists`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Emballer le livrable
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+ Fournir un lien GitHub :
+- Pousser le code sur un dépôt GitHub et partager le lien (format recommandé).
+
+```powershell
+# depuis la racine du projet (supprimez node_modules si vous voulez réduire la taille)
+Compress-Archive -Path .\* -DestinationPath ..\art-gallery-deliverable.zip -Force
+```
+
