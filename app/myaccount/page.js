@@ -323,6 +323,18 @@ export default function MyAccountPage() {
       `}</style>
 
       {/* Header */}
+      <div
+    style={{
+      position: 'absolute',
+      inset: 0,
+      backgroundImage: "url('/images/1 (2).png')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      opacity: 0.05,
+      zIndex: 0,
+    }}
+  ></div>
       <nav style={{
         background: 'rgba(10, 25, 47, 0.95)',
         backdropFilter: 'blur(20px)',
