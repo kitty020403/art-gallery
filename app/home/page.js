@@ -1,7 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import CoverflowCarousel from "./CoverflowCarousel";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -25,15 +24,14 @@ export default function LandingPage() {
     checkAuth();
   }, []);
 
-  // 🖼️ === DÉCLARATION DES DONNÉES MANQUANTES ===
   const artworks = [
     {
       id: 1,
-      title: 'Les Couleurs de Carthage',
+      title: '  Blue',
       artist: 'Ismail Bahri',
       year: '2020',
-      description: 'Une exploration poétique de la lumière et du mouvement.',
-      image: '/images/8.jpg',
+      description: '"The white of the walls, the blue of the doors, the suspended flowers and the scent of jasmine in the wind."',
+      image: '/images/6.png',
     },
     {
       id: 2,
@@ -77,7 +75,6 @@ export default function LandingPage() {
     },
     
   ];
-  // =============================================
 
   function handleTouchStart(e) {
     setTouchStartX(e.touches[0].clientX);
@@ -185,11 +182,11 @@ export default function LandingPage() {
     style={{
       position: 'absolute',
       bottom: '70px',
-      right: '1300px',
+      right: '1200px',
       transform: 'translateY(-80%)',
-      fontSize: '20px',           // Taille du texte
-      fontWeight: '300',
-      color: '#E9D8B4',
+      fontSize: '20px',
+      fontWeight: '350',
+      color: '#BEA173',
       display: 'flex',
       alignItems: 'center',
       gap: '8px'
@@ -197,7 +194,7 @@ export default function LandingPage() {
     href="#home"
     className="nav-link"
   >
-    <i className="fas fa-home" style={{ fontSize: '22px' }}></i> {/* Icon plus grande */}
+    <i className="fas fa-home" style={{ fontSize: '20px' }}></i>
     Home
   </a>
 
@@ -206,19 +203,19 @@ export default function LandingPage() {
     style={{
       position: 'absolute',
       bottom: '70px',
-      right: '1150px',
+      right: '1050px',
       transform: 'translateY(-80%)',
       fontSize: '20px',
-      fontWeight: '300',
-      color: '#E9D8B4',
+      fontWeight: '350',
+      color: '#BEA173',
       display: 'flex',
       alignItems: 'center',
       gap: '8px'
     }}
-    href="#artworks"
+    href="artworks"
     className="nav-link"
   >
-    <i className="fas fa-palette" style={{ fontSize: '22px' }}></i>
+    <i className="fas fa-palette" style={{ fontSize: '20px' }}></i>
     Artworks
   </a>
 
@@ -227,19 +224,19 @@ export default function LandingPage() {
     style={{
       position: 'absolute',
       bottom: '70px',
-      right: '1025px',
+      right: '925px',
       transform: 'translateY(-80%)',
       fontSize: '20px',
-      fontWeight: '300',
-      color: '#E9D8B4',
+      fontWeight: '350',
+      color: '#BEA173',
       display: 'flex',
       alignItems: 'center',
       gap: '8px'
     }}
-    href="#artists"
+    href="artists"
     className="nav-link"
   >
-    <i className="fas fa-user" style={{ fontSize: '22px' }}></i>
+    <i className="fas fa-user" style={{ fontSize: '20px' }}></i>
     Artists
   </a>
 
@@ -248,31 +245,32 @@ export default function LandingPage() {
     style={{
       position: 'absolute',
       bottom: '70px',
-      right: '900px',
+      right: '820px',
       transform: 'translateY(-80%)',
       fontSize: '20px',
-      fontWeight: '300',
-      color: '#E9D8B4',
+      fontWeight: '350',
+      color: '#BEA173',
       display: 'flex',
       alignItems: 'center',
       gap: '8px'
     }}
-    href="#about"
+    href="aboutus"
     className="nav-link"
   >
-    <i className="fas fa-info-circle" style={{ fontSize: '22px' }}></i>
+    <i className="fas fa-info-circle" style={{ fontSize: '20px' }}></i>
     About
   </a>
 
 
     {/* Search Bar */}
-    <div style={{ position: 'absolute', top: '110px' , right:'950px' ,transform: 'translateY(-80%)'}}>
+    <div style={{ position: 'absolute', top: '110px' , right:'850px' ,transform: 'translateY(-80%)'}}>
       <input 
         type="text" 
-        placeholder="Search for a painting..." 
+        placeholder="          Search for a specific painting" 
         style={{
           padding: '8px 32px 8px 12px',
           borderRadius: '60px',
+          fontSize:'22px',
           border: '1.5px solid #BEA173',
           outline: 'none',
           backgroundColor: 'rgba(255, 255, 255, 0.5)',
@@ -281,11 +279,12 @@ export default function LandingPage() {
         }}
       />
       <i className="fas fa-search" style={{
+        fontSize: '25px',
         position: 'absolute',
-        right: '10px',
+        right: '360px',
         top: '50%',
         transform: 'translateY(-50%)',
-        color: '#fffeffff'
+        color: '#BEA173'
       }}></i>
     </div>
   </div>
@@ -324,7 +323,6 @@ export default function LandingPage() {
               e.currentTarget.style.color = '#BEA173';
             }}
           >
-            {/* Icon container (framed) */}
             <span
               style={{
                 width: '36px',
@@ -336,10 +334,8 @@ export default function LandingPage() {
                 background: 'transparent'
               }}
             >
-              <i className="fas fa-user-plus" style={{ color: '#001026', fontSize: '16px' }}></i>
+              <i className="fas fa-user" style={{ color: '#001026', fontSize: '16px' }}></i>
             </span>
-
-            {/* Label */}
             <span style={{ display: 'inline-block' }}>My Account</span>
             
           </button>
@@ -369,7 +365,6 @@ export default function LandingPage() {
               e.currentTarget.style.color = '#BEA173';
             }}
           >
-            {/* Icon container (framed) */}
             <span
               style={{
                 width: '36px',
@@ -383,8 +378,6 @@ export default function LandingPage() {
             >
               <i className="fas fa-user-plus" style={{ color: '#BEA173', fontSize: '16px' }}></i>
             </span>
-
-            {/* Label */}
             <span style={{ display: 'inline-block' }}>Sign Up</span>
             
           </button>
@@ -414,7 +407,6 @@ export default function LandingPage() {
               e.currentTarget.style.color = '#BEA173';
             }}
           >
-            {/* Icon container (framed) */}
             <span
               style={{
                 width: '36px',
@@ -428,8 +420,6 @@ export default function LandingPage() {
             >
               <i className="fas fa-user-plus" style={{ color: '#BEA173', fontSize: '16px' }}></i>
             </span>
-
-            {/* Label */}
             <span style={{ display: 'inline-block' }}>login</span>
             
           </button>
@@ -448,7 +438,7 @@ export default function LandingPage() {
       }}>
          
         {/* Gallery Section */}
-        <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '90vh', paddingTop: '60px' }}>
+        <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '90vh', paddingTop: '30px' }}>
           {/* Title Section */}
           <div className="text-center mb-5" style={{ position: 'relative', zIndex: '1' }}>
             <h1 className="display-4 mb-3" style={{ 
@@ -483,22 +473,24 @@ export default function LandingPage() {
     <span>→</span>
   </button>
 
-  <button className="px-6 py-3 border border-[#C6B47E] text-[#C6B47E] rounded-lg font-medium hover:bg-[#C6B47E]/10 transition"
-   style={{ 
-                borderRadius: '8px',
-                border: 'none',
-                padding: '12px 32px',
-                fontWeight: '400',
-                backgroundColor: 'rgba(190, 161, 115, 0.1)',
-                color: '#ffffff',
-                letterSpacing: '0.5px',
-                boxShadow: '0 4px 15px rgba(204, 119, 34, 0.3)',
-                fontSize: '1.05rem'
-              }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#cbbd93'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = '#bea173'}>
-    Learn More
-  </button>
+  <button
+  style={{
+    borderRadius: '8px',
+    padding: '12px 32px',
+    fontWeight: '400',
+    backgroundColor: 'rgba(0,16,38,0.1)',
+    color: '#bea173',
+    letterSpacing: '0.5px',
+    boxShadow: '0 4px 15px rgba(204, 119, 34, 0.3)',
+    fontSize: '1.05rem',
+    border: '#BEA173 1.5px solid'
+  }}
+  onMouseEnter={(e) => e.target.style.backgroundColor = '#cbbd93'}
+  onMouseLeave={(e) => e.target.style.backgroundColor = 'rgba(0,16,38,0.1)'}
+>
+  Learn More
+</button>
+
 </div>
 
 
@@ -513,7 +505,6 @@ export default function LandingPage() {
     zIndex: 10,
   }}
 >
-  {/* Pill container matching image */}
   <div
     role="toolbar"
     aria-label="Artwork actions"
@@ -531,7 +522,6 @@ export default function LandingPage() {
       boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
     }}
   >
-    {/* Button: like */}
     <button
       aria-label="Add to favorites"
       title="Add to favorites"
@@ -560,7 +550,6 @@ export default function LandingPage() {
       <i className="fas fa-heart" style={{ fontSize: '16px' }}></i>
     </button>
 
-    {/* Button: view */}
     <button
       aria-label="View stats"
       title="View stats"
@@ -589,7 +578,6 @@ export default function LandingPage() {
       <i className="fas fa-eye" style={{ fontSize: '16px' }}></i>
     </button>
 
-    {/* Button: share */}
     <button
       aria-label="Share"
       title="Share"
@@ -620,44 +608,58 @@ export default function LandingPage() {
   </div>
 </div>
 
-{/* === TON CAROUSEL COMMENCE ICI === */}
-
           <div className="position-relative" style={{ width: '100%', maxWidth: '1200px' }}>
             {/* Art Cards Stack */}
             <div
               className="d-flex justify-content-center"
               style={{ 
-                perspective: '1000px',
-                height: '520px',
-                marginBottom: '30px'
+                perspective: '2000px',
+                height: '400px',
+                marginBottom: '30px',
+                position: 'relative'
               }}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
             >
-              {artworks.map((artwork, index) => {
-                const isActive = index === currentSlide;
-                const offset = index - currentSlide;
+              {[-2, -1, 0, 1, 2].map((position) => {
+                // Calcul de l'index avec boucle circulaire
+                const index = (currentSlide + position + artworks.length) % artworks.length;
+                const artwork = artworks[index];
+                const isActive = position === 0;
+                
+                // Disposition en anneau (cercle) - 5 cartes visibles en boucle
+                const angle = position * 30; // Angle entre chaque carte
+                const radius = 320; // Rayon du cercle
+                const translateX = Math.sin((angle * Math.PI) / 180) * radius;
+                const translateZ = Math.cos((angle * Math.PI) / 180) * radius - radius;
+                const rotateY = -angle;
+                
                 return (
                   <div
-                    key={artwork.id}
+                    key={`${artwork.id}-${position}`}
                     style={{
                       position: 'absolute',
                       transform: `
-                        translateX(${offset * 30}%) 
-                        translateZ(${isActive ? 0 : -150}px) 
-                        rotateY(${offset * 0.1}deg)
+                        translateX(${translateX}px) 
+                        translateZ(${translateZ}px)
+                        rotateY(${rotateY}deg)
+                        scale(${isActive ? 1.1 : 0.8})
                       `,
                       opacity: isActive ? 1 : 0.5,
-                      transition: 'all 0.5s ease-out',
-                      zIndex: artworks.length - Math.abs(offset),
-                      width: 'min(450px, 80vw)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                      borderRadius: '15px',
-                      backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(203, 189, 147, 0.2)',
-                      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
-                      overflow: 'hidden'
+                      transition: 'all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                      zIndex: isActive ? 100 : 50 - Math.abs(position),
+                      width: '400px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                      borderRadius: '20px',
+                      backdropFilter: 'blur(6px)',
+                      border: '2px solid rgba(203, 189, 147, 0.3)',
+                      boxShadow: isActive 
+                        ? '0 30px 60px -15px rgba(0, 0, 0, 0.6)' 
+                        : '0 20px 40px -10px rgba(0, 0, 0, 0.4)',
+                      overflow: 'hidden',
+                      transformStyle: 'preserve-3d',
+                      pointerEvents: isActive ? 'auto' : 'none'
                     }}
                   >
                     
@@ -666,23 +668,23 @@ export default function LandingPage() {
                       alt={artwork.title}
                       style={{
                         width: '100%',
-                        height: '300px',
+                        height: '200px',
                         objectFit: 'cover',
-                        borderRadius: '15px 15px 0 0'
+                        borderRadius: '20px 20px 0 0'
                       }}
                     />
                     <div className="p-4" style={{ 
-                      backgroundColor: 'rgba(255, 255, 255, 0.02)',
-                      borderTop: '1px solid rgba(203, 189, 147, 0.2)',
-                      color: '#9893cbff',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      borderTop: '2px solid rgba(203, 189, 147, 0.3)',
+                      color: '#cbbd93',
                       textAlign: 'left',
-                      borderRadius: '0 0 15px 15px',
-                      backdropFilter: 'blur(3px)'
+                      borderRadius: '0 0 20px 20px',
+                      backdropFilter: 'blur(5px)'
                     }}>
                       <h3 style={{ 
                         color: '#001026', 
-                        fontWeight: '400',
-                        fontSize: '1.3rem',
+                        fontWeight: '500',
+                        fontSize: '1.25rem',
                         marginBottom: '8px',
                         fontFamily: "'Playfair Display', serif",
                         letterSpacing: '0.5px'
@@ -696,7 +698,7 @@ export default function LandingPage() {
                       <p style={{ 
                         color: '#001026',
                         fontStyle: 'italic',
-                        fontSize: '0.9rem',
+                        fontSize: '0.88rem',
                         lineHeight: '1.5',
                         margin: 0,
                         fontWeight: '300'
@@ -709,11 +711,6 @@ export default function LandingPage() {
               })}
             </div>
 
-            {/* Navigation Arrows */}
-            
-
-            
-            {/* Profile pill (centered under indicators) */}
             <div style={{ display: 'flex', justifyContent: 'center', zIndex: 50 }}>
               <div
                 role="group"
@@ -722,7 +719,7 @@ export default function LandingPage() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px',
-                  background: 'rgba(253, 253, 253, 0.3)',
+                  background: 'rgba(255, 255, 255, 0.3)',
                   border: '1px solid rgba(203,189,147,0.14)',
                   padding: '12px 10px',
                   borderRadius: '999px',
@@ -754,13 +751,13 @@ export default function LandingPage() {
                 <img
                   src="/images/ismail.jpg"
                   alt="Artist avatar"
-                  style={{ width: '55px', height: '55px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(255,255,255,0.06)' }}
+                  style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(255,255,255,0.06)' }}
                 />
 
-                <div style={{ color: '#ffffff', textAlign: 'left' }}>
-                  <div style={{ color: '#cbbd93', fontSize: '0.98rem', fontWeight: 600 }}>Ismail Bahri</div>
-                  <div style={{ color: 'rgba(203,189,147,0.9)', fontSize: '0.9rem', marginTop: '2px' }}>1990 &nbsp; Djerba, Tunisia</div>
-                </div>
+               <div style={{ color: '#ffffff', textAlign: 'left' }}>
+  <div style={{ color: '#cbbd93', fontSize: '0.98rem', fontWeight: 600 }}>{artworks[currentSlide].artist}</div>
+  <div style={{ color: 'rgba(203,189,147,0.9)', fontSize: '0.9rem', marginTop: '2px' }}>{artworks[currentSlide].year} &nbsp; {artworks[currentSlide].title}</div>
+</div>
 
                 <button
                   aria-label="Search artist"
@@ -789,8 +786,8 @@ export default function LandingPage() {
                   aria-label="Next"
                   onClick={() => setCurrentSlide((c) => (c < artworks.length - 1 ? c + 1 : 0))}
                   style={{
-                    width: '36px',
-                    height: '36px',
+                    width: '60px',
+                    height: '60px',
                     borderRadius: '50%',
                     display: 'inline-flex',
                     alignItems: 'center',
