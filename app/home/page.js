@@ -418,7 +418,7 @@ export default function LandingPage() {
                 background: 'transparent'
               }}
             >
-              <i className="fas fa-user-plus" style={{ color: '#BEA173', fontSize: '16px' }}></i>
+              <i className="fas fa-sign-in-alt" style={{ color: '#BEA173', fontSize: '16px' }}></i>
             </span>
             <span style={{ display: 'inline-block' }}>login</span>
             
