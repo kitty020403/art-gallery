@@ -97,6 +97,19 @@ export default function LandingPage() {
       position: 'relative',
       overflow: 'hidden'
     }}>
+      <div
+    style={{
+      position: 'absolute',
+      inset: 0,
+      backgroundImage: "url('/images/1 (2).png')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      opacity: 0.05,
+      zIndex: 0,
+    }}
+></div>
+
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap');
         
@@ -136,10 +149,10 @@ export default function LandingPage() {
         <div className="d-flex align-items-center">
           <img 
             src="/images/logo.png" 
-            alt="Galerium" 
+            alt="Galerium logo" 
             onClick={() => router.push('/')}
             style={{
-              height: '1200px',
+              height: '60px',
               width: '150px',
               objectFit: 'contain',
               filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)',
@@ -151,11 +164,47 @@ export default function LandingPage() {
           />
         </div>
 
-        <div className="d-flex align-items-center gap-4">         
-           <a href="/catalog"  className="nav-link">Gallery</a>
-          <a href="#about" className="nav-link">Artists</a>
-          <a href="#explore" className="nav-link">Explore</a>
-          <a href="#contact" className="nav-link">Connect</a>
+      <div className="d-flex align-items-center gap-4">         
+        <a 
+          className="nav-link"
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (!user) {
+              router.push('/login?from=/catalog');
+            } else {
+              router.push('/catalog');
+            }
+          }}
+        >
+          Gallery
+        </a>
+        <a 
+          className="nav-link"
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (!user) {
+              router.push('/login?from=/artists');
+            } else {
+              router.push('/artists');
+            }
+          }}
+        >
+          Artists
+        </a>
+        <a 
+          className="nav-link"
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (!user) {
+              router.push('/login?from=/style');
+            } else {
+              router.push('/style');
+            }
+          }}
+        >
+          Explore
+        </a>
+        <a href="/contact" className="nav-link">Connect</a>
           {user && ['artist','admin'].includes(user.role) && (
             <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
           )}
@@ -223,7 +272,7 @@ export default function LandingPage() {
               letterSpacing: '1px',
               fontSize: 'clamp(2rem, 5vw, 3.5rem)'
             }}>
-              Discover Masterpieces
+              Discover Tunisia's artistic heritage
             </h1>
             <p className="lead" style={{ 
               color: 'rgba(203, 189, 147, 0.9)',

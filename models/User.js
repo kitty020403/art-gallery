@@ -19,6 +19,12 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'artist', 'admin'],
     default: 'user',
   },
+  // Optional profile fields
+  phone: { type: String },
+  bio: { type: String },
+  location: { type: String },
+  instagram: { type: String },
+  website: { type: String },
   favorites: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Artwork',

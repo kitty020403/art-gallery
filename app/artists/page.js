@@ -6,6 +6,7 @@ export default function ArtistsPage() {
   const router = useRouter();
   const [artists, setArtists] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     async function fetchArtists() {
@@ -22,7 +23,23 @@ export default function ArtistsPage() {
       }
     }
     fetchArtists();
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) setUser(data.data);
+        }
+      } catch {}
+    })();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch {}
+    router.push('/login');
+  };
 
   return (
     <div style={{
@@ -46,8 +63,9 @@ export default function ArtistsPage() {
         </div>
 
         <div>
-          <button className="btn" onClick={() => router.push('/login')} style={{ borderRadius: 6, padding: '6px 12px', border: '2px solid #cbbd93', color: '#cbbd93', backgroundColor: 'transparent', marginRight: 8 }}>Login</button>
-          <button className="btn" onClick={() => router.push('/signup')} style={{ borderRadius: 6, padding: '6px 12px', backgroundColor: '#e0c1a2ff', color: '#fff', border: 'none' }}>Register</button>
+          {user && (
+            <button className="btn" onClick={handleLogout} style={{ borderRadius: 6, padding: '6px 12px', backgroundColor: '#cbbd93', color: '#001026', border: 'none' }}>Logout</button>
+          )}
         </div>
       </nav>
 
