@@ -22,8 +22,47 @@ const ARTISTS = {
 
 export default function ArtistsPage({ params }) {
   const router = useRouter();
+<<<<<<< HEAD
   const slug = params?.slug ?? 'ismail-bahri';
   const artist = ARTISTS[slug] ?? ARTISTS['ismail-bahri'];
+=======
+  const [artists, setArtists] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    async function fetchArtists() {
+      try {
+        const res = await fetch('/api/artists');
+        const data = await res.json();
+        if (data.success) {
+          setArtists(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching artists:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchArtists();
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) setUser(data.data);
+        }
+      } catch {}
+    })();
+  }, []);
+>>>>>>> 483fa3a78f9c0a786bc76b280f26a3c31c4cdb3c
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch {}
+    router.push('/login');
+  };
 
   return (
     <div style={styles.page}>
@@ -39,12 +78,21 @@ export default function ArtistsPage({ params }) {
         </div>
       </header>
 
+<<<<<<< HEAD
       <main style={styles.container}>
         <aside style={styles.card}>
           <div style={styles.photoWrap}>
             <img src={artist.image} alt={artist.name} style={styles.photo} />
           </div>
         </aside>
+=======
+        <div>
+          {user && (
+            <button className="btn" onClick={handleLogout} style={{ borderRadius: 6, padding: '6px 12px', backgroundColor: '#cbbd93', color: '#001026', border: 'none' }}>Logout</button>
+          )}
+        </div>
+      </nav>
+>>>>>>> 483fa3a78f9c0a786bc76b280f26a3c31c4cdb3c
 
         <section style={styles.content}>
           <div style={styles.role}>{artist.role.toUpperCase()}</div>

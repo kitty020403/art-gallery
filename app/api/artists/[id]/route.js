@@ -3,10 +3,11 @@ import Artist from '@/models/Artist';
 import { NextResponse } from 'next/server';
 
 // GET single artist by ID
-export async function GET(request, { params }) {
+export async function GET(request, context) {
   try {
     await connectDB();
-    const artist = await Artist.findById(params.id);
+    const { id } = await context.params;
+    const artist = await Artist.findById(id);
     if (!artist) {
       return NextResponse.json({ success: false, error: 'Artist not found' }, { status: 404 });
     }
@@ -17,11 +18,12 @@ export async function GET(request, { params }) {
 }
 
 // PUT update artist by ID
-export async function PUT(request, { params }) {
+export async function PUT(request, context) {
   try {
     await connectDB();
+    const { id } = await context.params;
     const body = await request.json();
-    const artist = await Artist.findByIdAndUpdate(params.id, body, {
+    const artist = await Artist.findByIdAndUpdate(id, body, {
       new: true,
       runValidators: true,
     });
@@ -35,10 +37,11 @@ export async function PUT(request, { params }) {
 }
 
 // DELETE artist by ID
-export async function DELETE(request, { params }) {
+export async function DELETE(request, context) {
   try {
     await connectDB();
-    const artist = await Artist.findByIdAndDelete(params.id);
+    const { id } = await context.params;
+    const artist = await Artist.findByIdAndDelete(id);
     if (!artist) {
       return NextResponse.json({ success: false, error: 'Artist not found' }, { status: 404 });
     }

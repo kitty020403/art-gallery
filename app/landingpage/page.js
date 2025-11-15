@@ -152,7 +152,7 @@ export default function LandingPage() {
             alt="Galerium"
             onClick={() => router.push('/')}
             style={{
-              height: '1200px',
+              height: '60px',
               width: '150px',
               objectFit: 'contain',
               filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)',
@@ -164,6 +164,7 @@ export default function LandingPage() {
           />
         </div>
 
+<<<<<<< HEAD
         <div className="d-flex align-items-center gap-4">        
            <a href="/catalog"  className="nav-link">Gallery</a>
           <a href="#about" className="nav-link">Artists</a>
@@ -172,6 +173,56 @@ export default function LandingPage() {
           {user && ['artist','admin'].includes(user.role) && (
             <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
           )}
+=======
+      <div className="d-flex align-items-center gap-4">         
+        <a 
+          className="nav-link"
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (!user) {
+              router.push('/login?from=/catalog');
+            } else {
+              router.push('/catalog');
+            }
+          }}
+        >
+          Gallery
+        </a>
+        <a 
+          className="nav-link"
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (!user) {
+              router.push('/login?from=/artists');
+            } else {
+              router.push('/artists');
+            }
+          }}
+        >
+          Artists
+        </a>
+        <a 
+          className="nav-link"
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (!user) {
+              router.push('/login?from=/style');
+            } else {
+              router.push('/style');
+            }
+          }}
+        >
+          Explore
+        </a>
+        <a href="/contact" className="nav-link">Connect</a>
+          {user && ['artist','admin'].includes(user.role) && (
+            <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
+          )}
+
+
+
+
+>>>>>>> 483fa3a78f9c0a786bc76b280f26a3c31c4cdb3c
         </div>
 
         <div className="d-flex align-items-center gap-2">

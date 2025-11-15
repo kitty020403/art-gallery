@@ -5,11 +5,12 @@ import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 
 // GET single artwork by ID
-export async function GET(request, { params }) {
+export async function GET(request, context) {
   try {
     await connectDB();
-    console.log('GET /api/artworks/:id ->', params.id);
-    const artwork = await Artwork.findById(params.id).populate({ path: 'submittedBy', select: 'name email', strictPopulate: false });
+    const { id } = await context.params;
+    console.log('GET /api/artworks/:id ->', id);
+    const artwork = await Artwork.findById(id).populate({ path: 'submittedBy', select: 'name email', strictPopulate: false });
     if (!artwork) {
       return NextResponse.json({ success: false, error: 'Artwork not found' }, { status: 404 });
     }
@@ -21,10 +22,11 @@ export async function GET(request, { params }) {
 }
 
 // PUT update artwork by ID
-export async function PUT(request, { params }) {
+export async function PUT(request, context) {
   try {
     await connectDB();
-    console.log('PUT /api/artworks/:id ->', params.id);
+    const { id } = await context.params;
+    console.log('PUT /api/artworks/:id ->', id);
     const body = await request.json();
 
     // Determine role to allow status updates only for admin
@@ -51,7 +53,7 @@ export async function PUT(request, { params }) {
       if (Object.prototype.hasOwnProperty.call(body, 'rejectionReason')) update.rejectionReason = body.rejectionReason;
     }
 
-    const artwork = await Artwork.findByIdAndUpdate(params.id, update, {
+  const artwork = await Artwork.findByIdAndUpdate(id, update, {
       new: true,
       runValidators: true,
       omitUndefined: true,
@@ -67,10 +69,11 @@ export async function PUT(request, { params }) {
 }
 
 // DELETE artwork by ID
-export async function DELETE(request, { params }) {
+export async function DELETE(request, context) {
   try {
     await connectDB();
-    console.log('DELETE /api/artworks/:id ->', params.id);
+    const { id } = await context.params;
+    console.log('DELETE /api/artworks/:id ->', id);
     // Only admin can delete (simple enforcement)
     const token = request.cookies.get('token')?.value;
     let role = 'user';
@@ -83,7 +86,7 @@ export async function DELETE(request, { params }) {
     if (role !== 'admin') {
       return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
     }
-    const artwork = await Artwork.findByIdAndDelete(params.id);
+  const artwork = await Artwork.findByIdAndDelete(id);
     if (!artwork) {
       return NextResponse.json({ success: false, error: 'Artwork not found' }, { status: 404 });
     }
