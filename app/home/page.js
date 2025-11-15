@@ -100,6 +100,7 @@ export default function LandingPage() {
 
   return (
     <div style={{ 
+      zoom: '0.75',
       minHeight: '100vh', 
       background: '#001026',
       color: '#ffffff',
@@ -191,7 +192,7 @@ export default function LandingPage() {
       alignItems: 'center',
       gap: '8px'
     }}
-    href="#home"
+    href="home"
     className="nav-link"
   >
     <i className="fas fa-home" style={{ fontSize: '20px' }}></i>
