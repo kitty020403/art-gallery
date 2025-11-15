@@ -47,6 +47,7 @@ export async function PUT(request, context) {
         update[key] = body[key];
       }
     });
+    
     // Allow admin to modify status/rejectionReason
     if (role === 'admin') {
       if (Object.prototype.hasOwnProperty.call(body, 'status')) update.status = body.status;
