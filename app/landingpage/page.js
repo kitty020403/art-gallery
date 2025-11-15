@@ -147,9 +147,9 @@ export default function LandingPage() {
         zIndex: 1000
       }}>
         <div className="d-flex align-items-center">
-          <img 
-            src="/images/logo.png" 
-            alt="Galerium logo" 
+          <img
+            src="/images/logo.png"
+            alt="Galerium"
             onClick={() => router.push('/')}
             style={{
               height: '60px',
