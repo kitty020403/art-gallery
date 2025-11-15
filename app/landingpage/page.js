@@ -88,8 +88,8 @@ export default function LandingPage() {
   };
 
   return (
-    <div style={{ 
-      minHeight: '100vh', 
+    <div style={{
+      minHeight: '100vh',
       background: '#001026',
       color: '#ffffff',
       fontFamily: "'Lato', sans-serif",
@@ -112,7 +112,7 @@ export default function LandingPage() {
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap');
-        
+       
         .nav-link {
           color: #cbbd93;
           text-decoration: none;
@@ -122,15 +122,15 @@ export default function LandingPage() {
           transition: opacity 0.3s ease;
           opacity: 0.8;
         }
-        
+       
         .nav-link:hover {
           opacity: 1;
         }
-        
+       
         .btn-hover-effect {
           transition: all 0.3s ease;
         }
-        
+       
         .btn-hover-effect:hover {
           transform: translateY(-1px);
         }
@@ -164,6 +164,16 @@ export default function LandingPage() {
           />
         </div>
 
+<<<<<<< HEAD
+        <div className="d-flex align-items-center gap-4">        
+           <a href="/catalog"  className="nav-link">Gallery</a>
+          <a href="#about" className="nav-link">Artists</a>
+          <a href="#explore" className="nav-link">Explore</a>
+          <a href="#contact" className="nav-link">Connect</a>
+          {user && ['artist','admin'].includes(user.role) && (
+            <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
+          )}
+=======
       <div className="d-flex align-items-center gap-4">         
         <a 
           className="nav-link"
@@ -212,14 +222,15 @@ export default function LandingPage() {
 
 
 
+>>>>>>> 483fa3a78f9c0a786bc76b280f26a3c31c4cdb3c
         </div>
 
         <div className="d-flex align-items-center gap-2">
-          <button 
-            className="btn" 
+          <button
+            className="btn"
             onClick={() => router.push('/login')}
-            style={{ 
-              borderRadius: '4px', 
+            style={{
+              borderRadius: '4px',
               padding: '8px 20px',
               border: 'none',
               color: '#cbbd93',
@@ -234,11 +245,11 @@ export default function LandingPage() {
           >
             Login
           </button>
-          <button 
-            className="btn btn-hover-effect" 
+          <button
+            className="btn btn-hover-effect"
             onClick={() => router.push('/signup')}
-            style={{ 
-              borderRadius: '4px', 
+            style={{
+              borderRadius: '4px',
               padding: '8px 20px',
               border: 'none',
               fontWeight: '300',
@@ -256,7 +267,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Main Content */}
-      <main className="position-relative" style={{ 
+      <main className="position-relative" style={{
         minHeight: '100vh',
         padding: '2rem',
         overflowX: 'hidden',
@@ -269,7 +280,7 @@ export default function LandingPage() {
         <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '90vh', paddingTop: '60px' }}>
           {/* Title Section */}
           <div className="text-center mb-5" style={{ position: 'relative', zIndex: '1' }}>
-            <h1 className="display-4 mb-3" style={{ 
+            <h1 className="display-4 mb-3" style={{
               color: '#cbbd93',
               fontFamily: "'Playfair Display', serif",
               fontWeight: '400',
@@ -278,7 +289,7 @@ export default function LandingPage() {
             }}>
               Discover Tunisia's artistic heritage
             </h1>
-            <p className="lead" style={{ 
+            <p className="lead" style={{
               color: 'rgba(203, 189, 147, 0.9)',
               fontWeight: '300',
               fontSize: '1.1rem',
@@ -292,7 +303,7 @@ export default function LandingPage() {
             {/* Art Cards Stack */}
             <div
               className="d-flex justify-content-center"
-              style={{ 
+              style={{
                 perspective: '1000px',
                 height: '520px',
                 marginBottom: '30px'
@@ -310,8 +321,8 @@ export default function LandingPage() {
                     style={{
                       position: 'absolute',
                       transform: `
-                        translateX(${offset * 40}%) 
-                        translateZ(${isActive ? 0 : -150}px) 
+                        translateX(${offset * 40}%)
+                        translateZ(${isActive ? 0 : -150}px)
                         rotateY(${offset * 8}deg)
                       `,
                       opacity: isActive ? 1 : 0.5,
@@ -336,7 +347,7 @@ export default function LandingPage() {
                         borderRadius: '15px 15px 0 0'
                       }}
                     />
-                    <div className="p-4" style={{ 
+                    <div className="p-4" style={{
                       backgroundColor: 'rgba(255, 255, 255, 0.02)',
                       borderTop: '1px solid rgba(203, 189, 147, 0.2)',
                       color: '#cbbd93',
@@ -344,21 +355,21 @@ export default function LandingPage() {
                       borderRadius: '0 0 15px 15px',
                       backdropFilter: 'blur(3px)'
                     }}>
-                      <h3 style={{ 
-                        color: '#cbbd93', 
+                      <h3 style={{
+                        color: '#cbbd93',
                         fontWeight: '400',
                         fontSize: '1.3rem',
                         marginBottom: '8px',
                         fontFamily: "'Playfair Display', serif",
                         letterSpacing: '0.5px'
                       }}>{artwork.title}</h3>
-                      <p style={{ 
-                        color: '#e0c1a2', 
+                      <p style={{
+                        color: '#e0c1a2',
                         fontSize: '0.95rem',
                         marginBottom: '8px',
                         fontWeight: '300'
                       }}>{artwork.artist}, {artwork.year}</p>
-                      <p style={{ 
+                      <p style={{
                         color: 'rgba(203, 189, 147, 0.8)',
                         fontStyle: 'italic',
                         fontSize: '0.9rem',
@@ -461,10 +472,10 @@ export default function LandingPage() {
 
           {/* CTA Button */}
           <div className="text-center mt-5">
-            <button 
+            <button
               className="btn btn-lg px-4 btn-hover-effect"
               onClick={() => router.push('/signup')}
-              style={{ 
+              style={{
                 borderRadius: '8px',
                 border: 'none',
                 padding: '12px 32px',

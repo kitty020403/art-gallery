@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 export default function PublicUserPage({ params }) {
   const router = useRouter();
   const { id } = params;
+  console.log("User ID:", id);
+
   const [user, setUser] = useState(null);
   const [artworks, setArtworks] = useState([]);
   const [loading, setLoading] = useState(true);

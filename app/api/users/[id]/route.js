@@ -1,14 +1,32 @@
-import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
-import jwt from 'jsonwebtoken';
+import { NextResponse } from 'next/server';
 
+<<<<<<< HEAD
+export async function GET(req, { params }) {
+=======
 // GET /api/users/:id - Public user profile (limited fields)
 export async function GET(request, context) {
+>>>>>>> 483fa3a78f9c0a786bc76b280f26a3c31c4cdb3c
   try {
     await connectDB();
     const { id } = await context.params;
 
+<<<<<<< HEAD
+    // Vérifie ID valide MongoDB
+    const mongoose = await import('mongoose');
+    if (!mongoose.default.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ success: false, error: 'Invalid user ID' }, { status: 400 });
+    }
+
+    const user = await User.findById(id).select('name role createdAt');
+    if (!user) return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
+
+    return NextResponse.json({ success: true, data: user });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+=======
     const user = await User.findById(id).select('name role createdAt phone bio location instagram website');
     if (!user) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
@@ -98,5 +116,6 @@ export async function PUT(request, context) {
   } catch (error) {
     console.error('Error updating user role:', error);
     return NextResponse.json({ success: false, error: 'Failed to update user' }, { status: 500 });
+>>>>>>> 483fa3a78f9c0a786bc76b280f26a3c31c4cdb3c
   }
 }

@@ -1,9 +1,30 @@
 'use client';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
 
-export default function ArtistsPage() {
+const ARTISTS = {
+  'ismail-bahri': {
+    name: 'Ismail Bahri',
+    role: 'Visual Artist',
+    image: '/images/artist-ismail.jpg',
+    paragraphs: [
+      "Born in 1978 in Tunis, studied at the Institut Supérieur des Beaux-Arts de Tunis and Le Fresnoy - Studio National des Arts Contemporains in France.",
+      "His work has been featured in numerous international exhibitions, including the Venice Biennale, Sharjah Biennial and Centre Pompidou. He is known for a minimalist approach and a poetic engagement with materials and time.",
+      "Bahri's films and installations explore simple everyday actions transformed into profound meditations on perception and existence."
+    ],
+    stats: [
+      { key: 'featured', label: 'Featured', icon: '★' },
+      { key: 'location', label: 'Location', icon: '📍' },
+      { key: 'style', label: 'Style', icon: '▦' }
+    ]
+  }
+};
+
+export default function ArtistsPage({ params }) {
   const router = useRouter();
+  const slug = params?.slug ?? 'ismail-bahri';
+  const artist = ARTISTS[slug] ?? ARTISTS['ismail-bahri'];
+
   const [artists, setArtists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -23,6 +44,7 @@ export default function ArtistsPage() {
       }
     }
     fetchArtists();
+
     (async () => {
       try {
         const res = await fetch('/api/auth/me');
@@ -42,117 +64,201 @@ export default function ArtistsPage() {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#001026',
-      color: '#ffffff',
-      fontFamily: "'Inter', sans-serif",
-      position: 'relative'
-    }}>
-
-      {/* Header */}
-      <nav className="d-flex align-items-center justify-content-between" style={{
-        background: 'rgba(203, 189, 147, 0.05)',
-        backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(203, 189, 147, 0.2)',
-        height: '120px',
-        padding: '0 1rem'
-      }}>
-        <div className="d-flex align-items-center">
-          <img src="/images/logo.png" alt="Galerium" style={{ height: '100px', width: '100px', objectFit: 'contain', filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)' }} />
+    <div style={styles.page}>
+      <header style={styles.header}>
+        <div style={styles.logoRow}>
+          <div style={styles.brand}>galerium.</div>
+          <nav style={styles.nav}>
+            <button onClick={() => router.push('/')} style={styles.navBtn}>Home</button>
+            <button onClick={() => router.push('/catalog')} style={styles.navBtn}>Artworks</button>
+            <button onClick={() => router.push('/artists')} style={styles.navBtn}>Artists</button>
+            <button onClick={() => router.push('/aboutus')} style={styles.navBtn}>About</button>
+            {user && (
+              <button
+                onClick={handleLogout}
+                style={{
+                  borderRadius: 6,
+                  padding: '6px 12px',
+                  backgroundColor: '#cbbd93',
+                  color: '#001026',
+                  border: 'none',
+                  marginLeft: 12
+                }}
+              >
+                Logout
+              </button>
+            )}
+          </nav>
         </div>
+      </header>
 
-        <div>
-          {user && (
-            <button className="btn" onClick={handleLogout} style={{ borderRadius: 6, padding: '6px 12px', backgroundColor: '#cbbd93', color: '#001026', border: 'none' }}>Logout</button>
-          )}
-        </div>
-      </nav>
+      <main style={styles.container}>
+        <aside style={styles.card}>
+          <div style={styles.photoWrap}>
+            <img src={artist.image} alt={artist.name} style={styles.photo} />
+          </div>
+        </aside>
 
-      <main style={{ padding: '2rem', maxWidth: 1200, margin: '0 auto' }}>
-        <h1 style={{ color: '#cbbd93', marginBottom: '0.25rem' }}>Artists</h1>
-        <p style={{ color: 'rgba(203, 189, 147, 0.9)', marginTop: 0, marginBottom: '1.5rem' }}>Discover the masters behind the masterpieces.</p>
+        <section style={styles.content}>
+          <div style={styles.role}>{artist.role.toUpperCase()}</div>
+          <h1 style={styles.name}>{artist.name}</h1>
 
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: '3rem', color: '#cbbd93' }}>Loading artists...</div>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
-          {artists.map((artist) => (
-            <article key={artist._id} style={{ 
-              background: 'rgba(0,16,38,0.8)', 
-              borderRadius: 12, 
-              padding: '1rem', 
-              border: '1px solid rgba(203,189,147,0.12)',
-              cursor: 'pointer',
-              transition: 'transform 200ms ease, border-color 200ms ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.borderColor = 'rgba(203,189,147,0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.borderColor = 'rgba(203,189,147,0.12)';
-            }}
-            >
-              <h3 style={{ margin: '0 0 8px 0', color: '#cbbd93', fontSize: '1.1rem' }}>{artist.name}</h3>
-              <div style={{ 
-                backgroundColor: 'rgba(255,255,255,0.02)', 
-                padding: '8px', 
-                borderRadius: 8,
-                marginBottom: 8
-              }}>
-                <p style={{ margin: '0 0 4px 0', color: '#e0c1a2', fontSize: '0.9rem' }}>
-                  <strong>Period:</strong> {artist.period}
-                </p>
-                <p style={{ margin: '0 0 4px 0', color: '#e0c1a2', fontSize: '0.9rem' }}>
-                  <strong>Years:</strong> {artist.years}
-                </p>
-                <p style={{ margin: 0, color: '#e0c1a2', fontSize: '0.9rem' }}>
-                  <strong>Country:</strong> {artist.country}
-                </p>
-              </div>
-            </article>
+          {artist.paragraphs.map((p, i) => (
+            <p key={i} style={styles.paragraph}>{p}</p>
           ))}
-        </div>
-        )}
+
+          <div style={styles.stats}>
+            {artist.stats.map(s => (
+              <div key={s.key} style={styles.statItem}>
+                <div style={styles.statIcon}>{s.icon}</div>
+                <div style={styles.statLabel}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
 
       {/* Gradient overlay */}
-      <div style={{ position: 'fixed', inset: 0, background: 'linear-gradient(to bottom, rgba(203, 189, 147, 0.03), rgba(0,16,38,1))', pointerEvents: 'none', zIndex: -1 }} />
-    <footer style={{
-        background: '#0A192B',
-        borderTop: '1px solid rgba(203,189,147,0.08)',
-        color: '#cbbd93',
-        padding: '40px 2rem',
-        position: 'relative'
-      }}>
-        <div style={{
-          maxWidth: '1300px',
-          margin: '0 auto',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '12px'
-        }}>
-          {/* Left: logo + copyright */}
-            <div style={{ fontSize: '1.1rem', color: 'rgba(255, 255, 255, 0.95)',position: 'absolute', bottom:'10px' , left: '50px'}}>© 2025 galerium. All rights reserved.</div>
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'linear-gradient(to bottom, rgba(203, 189, 147, 0.03), rgba(0,16,38,1))',
+          pointerEvents: 'none',
+          zIndex: -1
+        }}
+      />
 
-          {/* Center: nav links */}
-          <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-            <a href="#" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem', position: 'absolute', bottom:'40px' ,right:'1200px'  }}>Explore More</a>
-            <a href="#" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem',position: 'absolute', bottom:'40px' ,right:'1000px' }}>View Details</a>
-            <a href="#" style={{ color: '#cbbd93', textDecoration: 'none', fontSize: '1.2rem',position: 'absolute', bottom:'40px' ,right:'800px' }}>Learn More</a>
-          </div>
-
-          {/* Right: legal links */}
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <a href="/privacy" style={{ color: 'rgba(255, 255, 255, 0.85)', textDecoration: 'none', fontSize: '1.1rem',position: 'absolute', bottom:'10px' , right: '200px' }}>Privacy Policy</a>
-            <span style={{ color: 'rgba(203,189,147,0.45)',position: 'absolute', bottom:'10px' , right: '180px' }}>|</span>
-            <a href="/terms" style={{ color: 'rgba(255, 255, 255, 0.85)', textDecoration: 'none', fontSize: '1.1rem',position: 'absolute', bottom:'10px' , right: '70px' }}>Terms of Use</a>
+      <footer style={styles.footer}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#9aa3ab' }}>
+          <small>© {new Date().getFullYear()} {artist.name}. All rights reserved.</small>
+          <div style={{ display: 'flex', gap: 16 }}>
+            <a href="/privacy" style={styles.footerLink}>Privacy Policy</a>
+            <a href="/terms" style={styles.footerLink}>Terms of Use</a>
           </div>
         </div>
       </footer>
     </div>
   );
 }
+
+const styles = {
+  page: {
+    minHeight: '100vh',
+    background: '#07182a',
+    color: '#e6e6e6',
+    fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial",
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  header: {
+    padding: '20px 40px',
+    borderBottom: '1px solid rgba(255,255,255,0.03)',
+    background: '#031524'
+  },
+  logoRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    maxWidth: 1100,
+    margin: '0 auto'
+  },
+  brand: {
+    fontSize: 32,
+    color: '#cbbd93',
+    fontWeight: 600,
+    letterSpacing: 1
+  },
+  nav: {
+    display: 'flex',
+    gap: 12,
+    alignItems: 'center'
+  },
+  navBtn: {
+    background: 'transparent',
+    border: 'none',
+    color: '#cfd6d9',
+    cursor: 'pointer',
+    padding: '6px 10px'
+  },
+  container: {
+    display: 'flex',
+    gap: 40,
+    padding: '48px 24px',
+    maxWidth: 1100,
+    margin: '0 auto',
+    alignItems: 'flex-start'
+  },
+  card: {
+    width: 360,
+    background: 'rgba(255,255,255,0.02)',
+    borderRadius: 18,
+    padding: 20,
+    boxShadow: '0 10px 30px rgba(0,0,0,0.6)'
+  },
+  photoWrap: {
+    background: '#fff',
+    borderRadius: 14,
+    padding: 12,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  photo: {
+    width: '100%',
+    height: 'auto',
+    borderRadius: 10,
+    objectFit: 'cover'
+  },
+  content: {
+    flex: 1,
+    maxWidth: 780
+  },
+  role: {
+    color: '#cfc7b0',
+    fontSize: 12,
+    letterSpacing: 2,
+    marginBottom: 6
+  },
+  name: {
+    fontSize: 48,
+    margin: '6px 0 18px 0',
+    color: '#ffffff',
+    fontWeight: 600
+  },
+  paragraph: {
+    color: '#cfd6d9',
+    lineHeight: 1.6,
+    marginBottom: 12
+  },
+  stats: {
+    marginTop: 22,
+    display: 'flex',
+    gap: 24
+  },
+  statItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    color: '#f7dca3'
+  },
+  statIcon: {
+    background: 'rgba(255,255,255,0.03)',
+    padding: 10,
+    borderRadius: 10,
+    fontSize: 16
+  },
+  statLabel: {
+    fontSize: 13,
+    color: '#f3e8c9'
+  },
+  footer: {
+    marginTop: 'auto',
+    background: '#031421',
+    borderTop: '1px solid rgba(255,255,255,0.03)'
+  },
+  footerLink: {
+    color: '#cbbd93',
+    textDecoration: 'none'
+  }
+};
