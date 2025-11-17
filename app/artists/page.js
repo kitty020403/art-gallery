@@ -170,7 +170,7 @@ export default function ArtistsPage() {
               <img 
                 src="/images/logo.png" 
                 alt="Galerium" 
-                onClick={() => handleNavigate('/landingpage')}
+                onClick={() => handleNavigate('/home')}
                 style={{
                   height: '48px',
                   width: '140px',
@@ -191,7 +191,7 @@ export default function ArtistsPage() {
               gap: '32px'
             }}>
               <a 
-                onClick={() => handleNavigate('/landingpage')}
+                onClick={() => handleNavigate('/home')}
                 style={{
                   fontSize: '16px',
                   fontWeight: '400',

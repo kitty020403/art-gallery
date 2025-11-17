@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 export default function SubmitArtworkPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ title: '', artist: '', year: '', image: '', description: '', period: '', price: '' });
+  const [form, setForm] = useState({ title: '', artist: '', year: '', image: '', description: '', period: '' });
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
@@ -46,7 +46,7 @@ export default function SubmitArtworkPage() {
       const data = await res.json();
       if (res.ok && data.success) {
         setMessage({ type: 'success', text: 'Artwork submitted! Pending approval.' });
-        setForm({ title: '', artist: '', year: '', image: '', description: '', period: '', price: '' });
+        setForm({ title: '', artist: '', year: '', image: '', description: '', period: '',  });
       } else {
         setMessage({ type: 'error', text: data.error || 'Submission failed.' });
       }
@@ -74,7 +74,7 @@ export default function SubmitArtworkPage() {
           <input name='image' value={form.image} onChange={handleChange} required placeholder='Image URL or /images/local.jpg' style={inputStyle} />
           <textarea name='description' value={form.description} onChange={handleChange} required placeholder='Description' rows={4} style={{ ...inputStyle, resize: 'vertical' }} />
           <input name='period' value={form.period} onChange={handleChange} placeholder='Period (optional)' style={inputStyle} />
-          <input name='price' value={form.price} onChange={handleChange} placeholder='Price (optional)' style={inputStyle} />
+          
           <button disabled={loading} type='submit' style={buttonStyle}>{loading ? 'Submitting...' : 'Submit'}</button>
         </div>
       </form>

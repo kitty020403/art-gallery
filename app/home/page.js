@@ -31,8 +31,8 @@ export default function LandingPage() {
       artist: 'Ismail Bahri',
       year: '2020',
       description: '"The white of the walls, the blue of the doors, the suspended flowers and the scent of jasmine in the wind."',
-      image: '/images/6.png',
-      artistImage: '/images/ismail.jpg',
+      image: '/images/6.jpg',
+      artistImage: '/images/iismail.png',
     },
     {
       id: 2,
@@ -81,6 +81,14 @@ export default function LandingPage() {
     },
     
   ];
+
+  function requireAuthAndGo(path) {
+    if (user) {
+      router.push(path);
+    } else {
+      router.push('/login');
+    }
+  }
 
   function handleTouchStart(e) {
     setTouchStartX(e.touches[0].clientX);
@@ -198,7 +206,8 @@ export default function LandingPage() {
       alignItems: 'center',
       gap: '8px'
     }}
-    href="home"
+    href="#"
+    onClick={(e) => { e.preventDefault(); router.push('/home'); }}
     className="nav-link"
   >
     <i className="fas fa-home" style={{ fontSize: '20px' }}></i>
@@ -219,7 +228,8 @@ export default function LandingPage() {
       alignItems: 'center',
       gap: '8px'
     }}
-    href="artworks"
+    href="#"
+    onClick={(e) => { e.preventDefault(); requireAuthAndGo('/catalog'); }}
     className="nav-link"
   >
     <i className="fas fa-palette" style={{ fontSize: '20px' }}></i>
@@ -240,7 +250,8 @@ export default function LandingPage() {
       alignItems: 'center',
       gap: '8px'
     }}
-    href="artists"
+    href="#"
+    onClick={(e) => { e.preventDefault(); requireAuthAndGo('/artists'); }}
     className="nav-link"
   >
     <i className="fas fa-user" style={{ fontSize: '20px' }}></i>
