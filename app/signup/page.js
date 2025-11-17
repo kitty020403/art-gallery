@@ -55,6 +55,18 @@ export default function SignupPage() {
       background: '#001026',
       minHeight: '100vh'
     }}>
+       <div
+    style={{
+      position: 'absolute',
+      inset: 0,
+      backgroundImage: "url('/images/1 (2).png')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      opacity: 0.1,
+      zIndex: 0,
+    }}
+  ></div>
       <div className="row justify-content-center align-items-center min-vh-100">
         <div className="col-md-8 col-lg-6 col-xl-5">
           <div className="card shadow-lg o-hidden border-0">

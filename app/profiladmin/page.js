@@ -482,8 +482,63 @@ export default function AdminPanel() {
                             <span style={{ fontSize: 12, color: 'rgba(203,189,147,0.8)' }}>By: {artwork.submittedBy?.name || artwork.submittedBy?.email || 'user'}</span>
                           </div>
                         )}
-                        {/* Status and rejection reason hidden */}
-                        {/* Action buttons temporarily removed */}
+                        {/* Status and moderation controls */}
+                        <div style={{ marginBottom: 8 }}>
+                          <span style={{ fontSize: 13, color: artwork.status === 'approved' ? '#28a745' : artwork.status === 'rejected' ? '#dc3545' : '#ffc107', fontWeight: 500 }}>
+                            Status: {artwork.status.charAt(0).toUpperCase() + artwork.status.slice(1)}
+                          </span>
+                          {artwork.status === 'rejected' && artwork.rejectionReason && (
+                            <span style={{ fontSize: 12, color: '#dc3545', marginLeft: 8 }}>
+                              (Reason: {artwork.rejectionReason})
+                            </span>
+                          )}
+                        </div>
+                        {artwork.status !== 'approved' && (
+                          <button
+                            style={{
+                              marginRight: 8,
+                              background: '#28a745',
+                              color: '#fff',
+                              border: 'none',
+                              borderRadius: 6,
+                              padding: '6px 14px',
+                              cursor: 'pointer',
+                              fontSize: 14
+                            }}
+                            onClick={async () => {
+                              await fetch(`/api/artworks/${artwork._id}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ status: 'approved', rejectionReason: '' })
+                              });
+                              fetchArtworks();
+                            }}
+                          >Approve</button>
+                        )}
+                        {artwork.status !== 'rejected' && (
+                          <button
+                            style={{
+                              background: '#dc3545',
+                              color: '#fff',
+                              border: 'none',
+                              borderRadius: 6,
+                              padding: '6px 14px',
+                              cursor: 'pointer',
+                              fontSize: 14
+                            }}
+                            onClick={async () => {
+                              const reason = prompt('Enter rejection reason:','');
+                              if (reason !== null) {
+                                await fetch(`/api/artworks/${artwork._id}`, {
+                                  method: 'PUT',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({ status: 'rejected', rejectionReason: reason })
+                                });
+                                fetchArtworks();
+                              }
+                            }}
+                          >Reject</button>
+                        )}
                       </div>
                     </div>
                   </div>

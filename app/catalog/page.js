@@ -122,11 +122,11 @@ export default function CatalogPage() {
         padding: '0 1rem'
       }}>
         <div className="d-flex align-items-center">
-          <img
-            src="/images/logo.png"
-            alt="Galerium"
+          <img 
+            src="/images/logo.png" 
+            alt="Galerium" 
             onClick={() => router.push('/catalog')}
-            style={{ height: '70px', width: '120px', objectFit: 'contain', cursor: 'pointer', filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)' }}
+            style={{ height: '70px', width: '120px', objectFit: 'contain', cursor: 'pointer', filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)' }} 
           />
         </div>
 
@@ -167,7 +167,7 @@ export default function CatalogPage() {
                 <h3 style={{ margin: '0 0 6px 0', color: '#cbbd93', fontSize: '1.05rem' }}>{a.title}</h3>
                 <p style={{ margin: '0 0 8px 0', color: '#e0c1a2', fontSize: '0.92rem' }}>{a.artist} • {a.year}</p>
                 <p style={{ margin: '0 0 10px 0', color: '#fffafa', backgroundColor: 'rgba(255,255,255,0.02)', padding: '8px', borderRadius: 8, fontSize: '0.9rem', lineHeight: 1.4 }}>{a.description}</p>
-               
+                
                 {/* Interaction Buttons */}
                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'space-between', marginTop: '10px' }}>
                   <button

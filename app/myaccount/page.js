@@ -36,8 +36,8 @@ import { useRouter } from 'next/navigation';
 
 export default function MyAccountPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('buyer');
-  const [accountType, setAccountType] = useState('buyer');
+  const [activeTab, setActiveTab] = useState('user');
+  const [accountType, setAccountType] = useState('user');
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -699,14 +699,14 @@ export default function MyAccountPage() {
               <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
                 <Button
                   onClick={() => {
-                    setAccountType('buyer');
-                    setActiveTab('buyer');
+                    setAccountType('user');
+                    setActiveTab('user');
                   }}
                   className=""
                   style={{
-                    background: accountType === 'buyer' ? 'rgba(190, 161, 115, 0.18)' : 'transparent',
-                    border: `1px solid ${accountType === 'buyer' ? '#BEA173' : 'rgba(190, 161, 115, 0.14)'}`,
-                    color: accountType === 'buyer' ? '#BEA173' : 'rgba(203, 189, 147, 0.75)',
+                    background: accountType === 'user' ? 'rgba(190, 161, 115, 0.18)' : 'transparent',
+                    border: `1px solid ${accountType === 'user' ? '#BEA173' : 'rgba(190, 161, 115, 0.14)'}`,
+                    color: accountType === 'user' ? '#BEA173' : 'rgba(203, 189, 147, 0.75)',
                     padding: '8px 20px',
                     borderRadius: '22px',
                     cursor: 'pointer',
@@ -714,7 +714,7 @@ export default function MyAccountPage() {
                     fontWeight: '300'
                   }}
                 >
-                  👤 Buyer
+                  👤 User
                 </Button>
 
                 <Button
@@ -748,11 +748,11 @@ export default function MyAccountPage() {
           display: 'flex',
           justifyContent: 'center'
         }}>
-          {accountType === 'buyer' ? (
+          {accountType === 'user' ? (
             <>
               <button 
-                className={`tab-button-account ${activeTab === 'buyer' ? 'active' : ''}`}
-                onClick={() => setActiveTab('buyer')}
+                className={`tab-button-account ${activeTab === 'user' ? 'active' : ''}`}
+                onClick={() => setActiveTab('user')}
               >
                 PROFILE
               </button>
@@ -801,7 +801,7 @@ export default function MyAccountPage() {
 
         {/* Tab Content */}
         <div>
-          {activeTab === 'buyer' && (
+          {activeTab === 'user' && (
             <div style={{
               background: 'rgba(10, 25, 47, 0.28)',
               backdropFilter: 'blur(8px)',
