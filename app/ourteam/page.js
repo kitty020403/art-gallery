@@ -1,28 +1,39 @@
 'use client';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
 
-export default function AboutPage() {
-  const router = useRouter();
+
+export default function OurTeamPage() {
+const router = useRouter();
+
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        const res = await fetch('/api/auth/me');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success) setUser(data.data);
-        }
-      } catch (e) {
-        // silently ignore
-      }
+  const teamMembers = [
+    {
+      id: 1,
+      name: 'Nour Gaida',
+      image: '/images/nour.png'
+    },
+    {
+      id: 2,
+      name: 'Malak Ben jemaa',
+      image: '/images/malak.png'
+    },
+    {
+      id: 3,
+      name: 'Rihem ben Souissi',
+      image: '/images/rihem.png'
+    },
+    {
+      id: 4,
+      name: 'Lina Mrad',
+      image: '/images/lina.png'
     }
-    checkAuth();
-  }, []);
+  ];
 
   return (
     <div style={{ 
+      zoom: '0.75',
       minHeight: '100vh', 
       background: '#001026',
       color: '#ffffff',
@@ -32,13 +43,13 @@ export default function AboutPage() {
       overflow: 'hidden'
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Lato:wght@300;400;500&display=swap');
         
         .nav-link {
-          color: #BEA173;
+          color: #cbbd93;
           text-decoration: none;
-          fontSize: 20px;
-          font-weight: 350;
+          fontSize: 60px;
+          font-weight: 500;
           letter-spacing: 0.5px;
           transition: opacity 0.3s ease;
           opacity: 0.8;
@@ -48,31 +59,17 @@ export default function AboutPage() {
           opacity: 1;
         }
         
-        .btn-hover-effect {
-          transition: all 0.3s ease;
+        .team-card {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        .btn-hover-effect:hover {
-          transform: translateY(-1px);
-        }
-
-        .animate-in {
-          animation: fadeInUp 0.6s ease forwards;
-        }
-
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+        .team-card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 20px 40px rgba(190, 161, 115, 0.2);
         }
       `}</style>
 
-      {/* Background Image */}
+      {/* Background Pattern */}
       <div
         style={{
           position: 'absolute',
@@ -86,21 +83,7 @@ export default function AboutPage() {
         }}
       />
 
-      {/* Gradient Overlay */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'linear-gradient(to bottom, rgba(203, 189, 147, 0.15) 0%, rgba(0, 16, 38, 1) 100%)',
-        pointerEvents: 'none',
-        zIndex: 0
-      }}></div>
-
-{/* Header */}
       <nav className="d-flex align-items-center justify-content-between px-5" style={{
-        zoom: '0.75',
         background: '#0A192B',
         backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(203, 189, 147, 0.15)',
@@ -378,251 +361,128 @@ export default function AboutPage() {
         </div>
       </nav>
 
-      {/* Main Content - About Section */}
+      {/* Main Content */}
       <main style={{ 
         position: 'relative', 
         zIndex: 1,
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '4rem 2rem'
+        padding: '80px 60px',
+        minHeight: 'calc(100vh - 140px)'
       }}>
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.05)',
-          borderRadius: '20px',
-          padding: '3rem',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(203, 189, 147, 0.1)',
-          boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
-        }}>
-          <h1 className="animate-in" style={{ 
-            fontSize: 'clamp(2.5rem, 5vw, 3.5rem)',
-            marginBottom: '2rem',
-            fontWeight: '300',
-            color: '#ffffff',
-            fontFamily: "'Playfair Display', serif"
+        {/* Title */}
+        <div className="text-center mb-5" style={{ marginBottom: '80px' }}>
+          <h1 style={{ 
+            color: '#cbbd93',
+            fontFamily: "'Playfair Display', serif",
+            fontWeight: '400',
+            letterSpacing: '2px',
+            fontSize: '3.5rem',
+            marginBottom: '20px'
           }}>
-            About <span style={{ fontWeight: '600', color: '#BEA173' }}>galerium.</span>
+            Our Team
           </h1>
-          
-          <p className="animate-in" style={{
-            lineHeight: '1.8',
-            color: '#c0c0c0',
-            marginBottom: '1.5rem',
-            fontSize: '1.1rem',
-            animationDelay: '0.1s'
-          }}>
-            Welcome to Galerium, an interactive digital gallery dedicated to showcasing the richness and diversity of Tunisian painting. 
-            Here, you are invited to explore a cultural space designed not only to display art, but to honor the artistic who shape Tunisia's visual identity.
-          </p>
+        </div>
 
-          <p className="animate-in" style={{
-            lineHeight: '1.8',
-            color: '#c0c0c0',
-            marginBottom: '2rem',
-            fontSize: '1.1rem',
-            animationDelay: '0.2s'
-          }}>
-            This platform unites art lovers with <span style={{ color: '#BEA173', fontWeight: '500' }}>Tunisian painters</span> — promoting, valorizing, or established creators—by bringing their work with the visibility they deserve.
-          </p>
-
-          <ul style={{ 
-            listStyle: 'none', 
-            margin: '2rem 0',
-            padding: 0
-          }}>
-            <li className="animate-in" style={{
-              padding: '0.8rem 0',
-              paddingLeft: '2rem',
-              position: 'relative',
-              color: '#c0c0c0',
-              lineHeight: '1.6',
-              fontSize: '1.05rem',
-              animationDelay: '0.3s'
-            }}>
-              <span style={{
-                position: 'absolute',
-                left: 0,
-                color: '#BEA173',
-                fontWeight: 'bold'
-              }}>→</span>
-              A meaningful alternative to social media, where the fast-paced trend often overshadows artistic quality and work.
-            </li>
-            <li className="animate-in" style={{
-              padding: '0.8rem 0',
-              paddingLeft: '2rem',
-              position: 'relative',
-              color: '#c0c0c0',
-              lineHeight: '1.6',
-              fontSize: '1.05rem',
-              animationDelay: '0.4s'
-            }}>
-              <span style={{
-                position: 'absolute',
-                left: 0,
-                color: '#BEA173',
-                fontWeight: 'bold'
-              }}>→</span>
-              An intuitive, visionary experience that allows visitors to navigate artifacts in a distilled, thematic, and bookmarked manner.
-            </li>
-            <li className="animate-in" style={{
-              padding: '0.8rem 0',
-              paddingLeft: '2rem',
-              position: 'relative',
-              color: '#c0c0c0',
-              lineHeight: '1.6',
-              fontSize: '1.05rem',
-              animationDelay: '0.5s'
-            }}>
-              <span style={{
-                position: 'absolute',
-                left: 0,
-                color: '#BEA173',
-                fontWeight: 'bold'
-              }}>→</span>
-              An online gallery that believes that <span style={{ color: '#BEA173', fontWeight: '500' }}>every painting tells a story</span>—a story of memory, expression, and the master faces of Tunisia.
-            </li>
-          </ul>
-
-          <p className="animate-in" style={{
-            lineHeight: '1.8',
-            color: '#c0c0c0',
-            marginBottom: '1rem',
-            fontSize: '1.1rem',
-            animationDelay: '0.6s'
-          }}>
-            For this reason, the platform is built to:
-          </p>
-
-          <ul style={{ 
-            listStyle: 'none', 
-            margin: '2rem 0',
-            padding: 0
-          }}>
-            <li className="animate-in" style={{
-              padding: '0.8rem 0',
-              paddingLeft: '2rem',
-              position: 'relative',
-              color: '#c0c0c0',
-              lineHeight: '1.6',
-              fontSize: '1.05rem',
-              animationDelay: '0.7s'
-            }}>
-              <span style={{
-                position: 'absolute',
-                left: 0,
-                color: '#BEA173',
-                fontWeight: 'bold'
-              }}>→</span>
-              Highlight artworks through an immersive viewing experience.
-            </li>
-            <li className="animate-in" style={{
-              padding: '0.8rem 0',
-              paddingLeft: '2rem',
-              position: 'relative',
-              color: '#c0c0c0',
-              lineHeight: '1.6',
-              fontSize: '1.05rem',
-              animationDelay: '0.8s'
-            }}>
-              <span style={{
-                position: 'absolute',
-                left: 0,
-                color: '#BEA173',
-                fontWeight: 'bold'
-              }}>→</span>
-              Facilitate communication between artists and patrons.
-            </li>
-            <li className="animate-in" style={{
-              padding: '0.8rem 0',
-              paddingLeft: '2rem',
-              position: 'relative',
-              color: '#c0c0c0',
-              lineHeight: '1.6',
-              fontSize: '1.05rem',
-              animationDelay: '0.9s'
-            }}>
-              <span style={{
-                position: 'absolute',
-                left: 0,
-                color: '#BEA173',
-                fontWeight: 'bold'
-              }}>→</span>
-              Promote local artist and cultural heritage.
-            </li>
-            <li className="animate-in" style={{
-              padding: '0.8rem 0',
-              paddingLeft: '2rem',
-              position: 'relative',
-              color: '#c0c0c0',
-              lineHeight: '1.6',
-              fontSize: '1.05rem',
-              animationDelay: '1s'
-            }}>
-              <span style={{
-                position: 'absolute',
-                left: 0,
-                color: '#BEA173',
-                fontWeight: 'bold'
-              }}>→</span>
-              Connect people, art lovers, and collectors.
-            </li>
-          </ul>
-
-          <p className="animate-in" style={{
-            lineHeight: '1.8',
-            color: '#c0c0c0',
-            marginBottom: '3rem',
-            fontSize: '1.1rem',
-            animationDelay: '1.1s'
-          }}>
-            Thank you for being here, for exploring, and for supporting Tunisian art.
-            Your presence brings Galerium to life — a space created to elevate, learn, and feel.
-          </p>
-
-          <div className="animate-in" style={{ 
-            textAlign: 'center',
-            animationDelay: '1.2s'
-          }}>
-            <button
-              onClick={() => router.push('/ourteam')}
+        {/* Team Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: '40px',
+          maxWidth: '1400px',
+          margin: '0 auto'
+        }}>
+          {teamMembers.map((member) => (
+            <div 
+              key={member.id}
+              className="team-card"
               style={{
-                borderRadius: '8px',
-                padding: '12px 32px',
-                fontWeight: '400',
-                backgroundColor: '#BEA173',
-                color: '#ffffff',
-                letterSpacing: '0.5px',
-                boxShadow: '0 4px 15px rgba(204, 119, 34, 0.3)',
-                fontSize: '1.05rem',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#cbbd93';
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 20px rgba(204, 119, 34, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = '#BEA173';
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 15px rgba(204, 119, 34, 0.3)';
+                background: 'rgba(255, 255, 255, 0.08)',
+                backdropFilter: 'blur(10px)',
+                borderRadius: '20px',
+                border: '1px solid rgba(203, 189, 147, 0.2)',
+                overflow: 'hidden',
+                cursor: 'pointer'
               }}
             >
-              <i className="fas fa-users"></i>
-              Contact Us
-            </button>
-          </div>
+              <div style={{
+                width: '100%',
+                height: '350px',
+                overflow: 'hidden',
+                position: 'relative'
+              }}>
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    transition: 'transform 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
+                  onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                />
+              </div>
+              <div style={{
+                padding: '25px',
+                textAlign: 'center',
+                background: 'rgba(10, 25, 47, 0.6)'
+              }}>
+                <h3 style={{
+                  color: '#CBBD93',
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: '1.5rem',
+                  fontWeight: '400',
+                  margin: 0
+                }}>
+                  {member.name}
+                </h3>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Links */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '50px',
+          marginTop: '100px'
+        }}>
+        
+        </div>
+        <div 
+          className="text-center mt-5 p-5"
+          style={{ 
+            background: 'rgba(203,189,147,0.1)', 
+            borderRadius: '15px',
+            border: '1px solid rgba(203,189,147,0.2)'
+          }}
+        >
+          <h4 style={{ color: '#cbbd93', marginBottom: '1rem' }}>
+            Want to Join Our Team?
+          </h4>
+          <p style={{ color: 'rgba(203,189,147,0.8)', marginBottom: '1.5rem' }}>
+            We&apos;re always looking for passionate art professionals to join our gallery
+          </p>
+          <button 
+            className="btn btn-lg"
+            onClick={() => router.push('/contact')}
+            style={{
+              background: '#cbbd93',
+              color: '#001026',
+              border: 'none',
+              padding: '0.8rem 2rem',
+              fontWeight: '600'
+            }}
+          >
+            <i className="fas fa-paper-plane me-2"></i>
+            Get in Touch
+          </button>
         </div>
       </main>
 
       {/* Footer */}
-   {/* Footer */}
       <footer style={{
-        zoom: '0.75',
         background: '#0A192B',
         borderTop: '1px solid rgba(203,189,147,0.08)',
         color: '#cbbd93',
@@ -658,3 +518,4 @@ export default function AboutPage() {
     </div>
   );
 }
+

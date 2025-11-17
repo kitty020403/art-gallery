@@ -46,8 +46,8 @@ export default function SignInPage() {
           // Use window.location for a full page redirect to ensure cookies are set
           window.location.href = '/profiladmin';
         } else {
-          console.log('Redirecting to catalog');
-          window.location.href = '/catalog';
+          console.log('Redirecting to home page');
+          window.location.href = '/home';
         }
       } else {
         setError(data.error || 'Login failed');
@@ -60,16 +60,29 @@ export default function SignInPage() {
   };
 
   return (
+    
     <div className="container-fluid bg-gradient-primary" style={{ 
       background: '#001026',
       minHeight: '100vh'
     }}>
+      <div
+    style={{
+      position: 'absolute',
+      inset: 0,
+      backgroundImage: "url('/images/1 (2).png')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      opacity: 0.2,
+      zIndex: 0,
+    }}
+  ></div>
       <div className="row justify-content-center align-items-center min-vh-100">
         <div className="col-md-8 col-lg-6 col-xl-5">
           <div className="card shadow-lg o-hidden border-0" style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
             <div className="card-body p-5">
               <div className="text-center mb-4">
-                <h2 className="fw-bold" style={{ color: '#1a1a2e' }}>Welcome Back</h2>
+                <h2 className="fw-bold" style={{ color: '#CC7722' }}>Welcome Back</h2>
                 <p className="text-muted">Sign in to your account</p>
               </div>
 
