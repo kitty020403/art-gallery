@@ -321,7 +321,20 @@ export default function MyAccountPage() {
 
         .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
       `}</style>
-
+ <div
+    style={{
+      position: 'absolute',
+      inset: 0,
+      backgroundImage: "url('/images/1 (2).png')",
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'repeat',
+      opacity: 0.08,
+      zIndex: 0,
+    }}
+  >
+    
+  </div>
       {/* Header */}
       {/* Header */}
       <nav className="d-flex align-items-center justify-content-between px-5" style={{
