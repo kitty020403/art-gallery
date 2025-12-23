@@ -1,5 +1,4 @@
 'use client';
-
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
@@ -457,7 +456,7 @@ export default function CatalogPage() {
                         cursor: 'pointer',
                       }}
                     >
-                      ❤️ {stats[a._id]?.likes || 0}
+                     ❤️ {stats[a._id]?.likes || 0}
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleInteraction(a._id, 'favorite'); }}
