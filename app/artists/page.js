@@ -8,7 +8,14 @@ export default function ArtistsPage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-
+   const requireAuthAndGo = (path) => {
+    if (!user) {
+      alert('Please login first');
+      router.push('/login');
+      return;
+    }
+    router.push(path);
+  };
   useEffect(() => {
     async function checkAuth() {
       try {

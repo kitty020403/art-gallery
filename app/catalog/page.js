@@ -10,7 +10,14 @@ export default function CatalogPage() {
   const [user, setUser] = useState(null);
   const [interactions, setInteractions] = useState({});
   const [stats, setStats] = useState({});
-
+  const requireAuthAndGo = (path) => {
+    if (!user) {
+      alert('Please login first');
+      router.push('/login');
+      return;
+    }
+    router.push(path);
+  };
   useEffect(() => {
     async function fetchArtworks() {
       try {
@@ -214,6 +221,7 @@ export default function CatalogPage() {
       alignItems: 'center',
       gap: '8px'
     }}
+    
     href="#"
     onClick={(e) => { e.preventDefault(); requireAuthAndGo('/artists'); }}
     className="nav-link"
