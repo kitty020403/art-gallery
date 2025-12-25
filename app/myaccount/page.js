@@ -321,7 +321,21 @@ export default function MyAccountPage() {
 
         .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
       `}</style>
-
+ <div
+    style={{
+      position: 'fixed',
+      inset: 0,
+      backgroundImage: "url('/images/1 (2).png')",
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'repeat',
+      opacity: 0.08,
+      zIndex: 0,
+       pointerEvents: 'none',
+    }}
+  >
+    
+  </div>
       {/* Header */}
       {/* Header */}
       <nav className="d-flex align-items-center justify-content-between px-5" style={{
@@ -357,7 +371,7 @@ export default function MyAccountPage() {
   <a 
     style={{
       position: 'absolute',
-      bottom: '70px',
+      bottom: '50px',
       right: '1200px',
       transform: 'translateY(-80%)',
       fontSize: '20px',
@@ -378,7 +392,7 @@ export default function MyAccountPage() {
   <a 
     style={{
       position: 'absolute',
-      bottom: '70px',
+      bottom: '50px',
       right: '1050px',
       transform: 'translateY(-80%)',
       fontSize: '20px',
@@ -388,7 +402,7 @@ export default function MyAccountPage() {
       alignItems: 'center',
       gap: '8px'
     }}
-    href="artworks"
+    href="catalog"
     className="nav-link"
   >
     <i className="fas fa-palette" style={{ fontSize: '20px' }}></i>
@@ -399,7 +413,7 @@ export default function MyAccountPage() {
   <a 
     style={{
       position: 'absolute',
-      bottom: '70px',
+      bottom: '50px',
       right: '925px',
       transform: 'translateY(-80%)',
       fontSize: '20px',
@@ -420,7 +434,7 @@ export default function MyAccountPage() {
   <a 
     style={{
       position: 'absolute',
-      bottom: '70px',
+      bottom: '50px',
       right: '820px',
       transform: 'translateY(-80%)',
       fontSize: '20px',
@@ -438,39 +452,10 @@ export default function MyAccountPage() {
   </a>
 
 
-    {/* Search Bar */}
-    <div style={{ position: 'absolute', top: '110px' , right:'850px' ,transform: 'translateY(-80%)'}}>
-      <input 
-        type="text" 
-        placeholder="          Search for a specific painting" 
-        style={{
-          padding: '8px 32px 8px 12px',
-          borderRadius: '60px',
-          fontSize:'22px',
-          border: '1.5px solid #BEA173',
-          outline: 'none',
-          backgroundColor: 'rgba(255, 255, 255, 0.5)',
-          color: '#fff',
-          width: '400px'
-        }}
-      />
-      <i className="fas fa-search" style={{
-        fontSize: '25px',
-        position: 'absolute',
-        right: '360px',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        color: '#BEA173'
-      }}></i>
-    </div>
+        {/* Search Bar removed */}
   </div>
 
-        <div className="d-flex align-items-center gap-4">
-          {user && ['artist','admin'].includes(user.role) && (
-            <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
-          )}
-
-        </div>
+        
 
         <div className="d-flex align-items-center gap-2">
           <button
@@ -495,8 +480,8 @@ export default function MyAccountPage() {
               e.currentTarget.style.color = '#001026';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#BEA173';
+              e.currentTarget.style.backgroundColor = '#BEA173';
+              e.currentTarget.style.color = '#001026';
             }}
           >
             <span
@@ -513,11 +498,10 @@ export default function MyAccountPage() {
               <i className="fas fa-user" style={{ color: '#001026', fontSize: '16px' }}></i>
             </span>
             <span style={{ display: 'inline-block' }}>My Account</span>
-            
           </button>
           <button
             className="btn btn-hover-effect"
-            onClick={() => router.push('/signup')}
+            onClick={handleLogout}
             style={{
               borderRadius: '12px',
               padding: '8px 18px',
@@ -552,56 +536,14 @@ export default function MyAccountPage() {
                 background: 'transparent'
               }}
             >
-              <i className="fas fa-user-plus" style={{ color: '#BEA173', fontSize: '16px' }}></i>
+              <i className="fas fa-sign-out-alt" style={{ color: '#BEA173', fontSize: '16px' }}></i>
             </span>
-            <span style={{ display: 'inline-block' }}>Sign Up</span>
-            
-          </button>
-          <button
-            className="btn btn-hover-effect"
-            onClick={() => router.push('/login')}
-            style={{
-              borderRadius: '12px',
-              padding: '8px 18px',
-              border: '1.5px solid #BEA173',
-              backgroundColor: 'transparent',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              fontWeight: '300',
-              color: '#BEA173',
-              fontSize: '18px',
-              letterSpacing: '0.5px',
-              cursor: 'pointer'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#cbbd93';
-              e.currentTarget.style.color = '#001026';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#BEA173';
-            }}
-          >
-            <span
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '8px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: 'transparent'
-              }}
-            >
-              <i className="fas fa-sign-in-alt" style={{ color: '#BEA173', fontSize: '16px' }}></i>
-            </span>
-            <span style={{ display: 'inline-block' }}>login</span>
-            
+            <span style={{ display: 'inline-block' }}>Logout</span>
           </button>
           
         </div>
       </nav>
+      
 
       
       {/* Account Type Indicator */}
@@ -746,25 +688,23 @@ export default function MyAccountPage() {
           borderBottom: '1px solid rgba(190, 161, 115, 0.08)',
           marginBottom: '34px',
           display: 'flex',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          position: 'relative',
+          zIndex: 2
         }}>
           {accountType === 'user' ? (
             <>
               <button 
                 className={`tab-button-account ${activeTab === 'user' ? 'active' : ''}`}
                 onClick={() => setActiveTab('user')}
+                style={{ pointerEvents: loading ? 'none' : 'auto' }}
               >
                 PROFILE
               </button>
               <button 
-                className={`tab-button-account ${activeTab === 'favorites' ? 'active' : ''}`}
-                onClick={() => setActiveTab('favorites')}
-              >
-                MY FAVORITES
-              </button>
-              <button 
                 className={`tab-button-account ${activeTab === 'settings' ? 'active' : ''}`}
                 onClick={() => setActiveTab('settings')}
+                style={{ pointerEvents: loading ? 'none' : 'auto' }}
               >
                 SETTINGS
               </button>
@@ -774,24 +714,14 @@ export default function MyAccountPage() {
               <button 
                 className={`tab-button-account ${activeTab === 'artist' ? 'active' : ''}`}
                 onClick={() => setActiveTab('artist')}
+                style={{ pointerEvents: loading ? 'none' : 'auto' }}
               >
                 ARTIST PROFILE
               </button>
               <button 
-                className={`tab-button-account ${activeTab === 'artworks' ? 'active' : ''}`}
-                onClick={() => setActiveTab('artworks')}
-              >
-                MY ARTWORKS
-              </button>
-              <button 
-                className={`tab-button-account ${activeTab === 'statistics' ? 'active' : ''}`}
-                onClick={() => setActiveTab('statistics')}
-              >
-                STATISTICS
-              </button>
-              <button 
                 className={`tab-button-account ${activeTab === 'settings' ? 'active' : ''}`}
                 onClick={() => setActiveTab('settings')}
+                style={{ pointerEvents: loading ? 'none' : 'auto' }}
               >
                 SETTINGS
               </button>
@@ -978,9 +908,13 @@ export default function MyAccountPage() {
               background: 'rgba(10, 25, 47, 0.28)',
               border: '1px solid rgba(190, 161, 115, 0.12)',
               borderRadius: '12px',
-              padding: '34px'
+              padding: '34px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '24px'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
+              <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
                 <h2 style={{
                   fontFamily: "var(--brand-head)",
                   fontSize: '1.6rem',
@@ -1001,59 +935,76 @@ export default function MyAccountPage() {
                   </div>
                 )}
               </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '18px' }}>
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <label style={{ display: 'block', marginBottom: '8px', color: '#CBBD93', fontSize: '13px' }}>ARTIST BIO</label>
-                  <textarea 
-                    className="input-field-account"
-                    value={userData.bio}
-                    disabled={!isEditing}
-                    onChange={(e) => setUserData({...userData, bio: e.target.value})}
-                    rows={5}
-                    style={{ resize: 'vertical' }}
-                  />
+              <div style={{ width: '100%' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '18px' }}>
+                  <div style={{ gridColumn: '1 / -1' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#CBBD93', fontSize: '13px' }}>ARTIST BIO</label>
+                    <textarea 
+                      className="input-field-account"
+                      value={userData.bio}
+                      disabled={!isEditing}
+                      onChange={(e) => setUserData({...userData, bio: e.target.value})}
+                      rows={5}
+                      style={{ resize: 'vertical' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#CBBD93', fontSize: '13px' }}>INSTAGRAM</label>
+                    <input 
+                      type="text"
+                      className="input-field-account"
+                      value={userData.instagram}
+                      disabled={!isEditing}
+                      onChange={(e) => setUserData({...userData, instagram: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#CBBD93', fontSize: '13px' }}>WEBSITE</label>
+                    <input 
+                      type="text"
+                      className="input-field-account"
+                      value={userData.website}
+                      disabled={!isEditing}
+                      onChange={(e) => setUserData({...userData, website: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#CBBD93', fontSize: '13px' }}>LOCATION</label>
+                    <input 
+                      type="text"
+                      className="input-field-account"
+                      value={userData.location}
+                      disabled={!isEditing}
+                      onChange={(e) => setUserData({...userData, location: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#CBBD93', fontSize: '13px' }}>EMAIL</label>
+                    <input 
+                      type="email"
+                      className="input-field-account"
+                      value={userData.email}
+                      disabled={!isEditing}
+                      onChange={(e) => setUserData({...userData, email: e.target.value})}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', color: '#CBBD93', fontSize: '13px' }}>INSTAGRAM</label>
-                  <input 
-                    type="text"
-                    className="input-field-account"
-                    value={userData.instagram}
-                    disabled={!isEditing}
-                    onChange={(e) => setUserData({...userData, instagram: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', color: '#CBBD93', fontSize: '13px' }}>WEBSITE</label>
-                  <input 
-                    type="text"
-                    className="input-field-account"
-                    value={userData.website}
-                    disabled={!isEditing}
-                    onChange={(e) => setUserData({...userData, website: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', color: '#CBBD93', fontSize: '13px' }}>LOCATION</label>
-                  <input 
-                    type="text"
-                    className="input-field-account"
-                    value={userData.location}
-                    disabled={!isEditing}
-                    onChange={(e) => setUserData({...userData, location: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', color: '#CBBD93', fontSize: '13px' }}>EMAIL</label>
-                  <input 
-                    type="email"
-                    className="input-field-account"
-                    value={userData.email}
-                    disabled={!isEditing}
-                    onChange={(e) => setUserData({...userData, email: e.target.value})}
-                  />
-                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '18px', marginTop: '24px' }}>
+                <Button 
+                  className="bg-[#BEA173] text-[#001026] hover:bg-[#CBBD93] transition-colors duration-200" 
+                  onClick={() => router.push('/submit')}
+                  style={{ fontWeight: 400, fontSize: '1rem', borderRadius: '10px', padding: '12px 32px' }}
+                >
+                  Upload New Artwork
+                </Button>
+                <Button
+                  className="bg-[#BEA173] text-[#001026] hover:bg-[#CBBD93] transition-colors duration-200"
+                  onClick={() => router.push('/mysubmissions')}
+                  style={{ fontWeight: 400, fontSize: '1rem', borderRadius: '10px', padding: '12px 32px' }}
+                >
+                  My Submissions
+                </Button>
               </div>
             </div>
           )}

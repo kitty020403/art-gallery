@@ -163,7 +163,7 @@ export default function AboutPage() {
       alignItems: 'center',
       gap: '8px'
     }}
-    href="artworks"
+    href="catalog"
     className="nav-link"
   >
     <i className="fas fa-palette" style={{ fontSize: '20px' }}></i>
@@ -240,12 +240,7 @@ export default function AboutPage() {
     </div>
   </div>
 
-        <div className="d-flex align-items-center gap-4">
-          {user && ['artist','admin'].includes(user.role) && (
-            <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
-          )}
-
-        </div>
+       
 
         <div className="d-flex align-items-center gap-2">
           <button
