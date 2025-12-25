@@ -300,12 +300,6 @@ export default function ArtistsPage() {
     </div>
   </div>
 
-        <div className="d-flex align-items-center gap-4">
-          {user && ['artist','admin'].includes(user.role) && (
-            <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
-          )}
-
-        </div>
 
         <div className="d-flex align-items-center gap-2">
           <button

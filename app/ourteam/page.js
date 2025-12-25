@@ -146,7 +146,7 @@ const router = useRouter();
       alignItems: 'center',
       gap: '8px'
     }}
-    href="artworks"
+    href="catalog"
     className="nav-link"
   >
     <i className="fas fa-palette" style={{ fontSize: '20px' }}></i>

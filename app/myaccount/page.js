@@ -323,7 +323,7 @@ export default function MyAccountPage() {
       `}</style>
  <div
     style={{
-      position: 'absolute',
+      position: 'fixed',
       inset: 0,
       backgroundImage: "url('/images/1 (2).png')",
       backgroundSize: 'contain',
@@ -331,6 +331,7 @@ export default function MyAccountPage() {
       backgroundRepeat: 'repeat',
       opacity: 0.08,
       zIndex: 0,
+       pointerEvents: 'none',
     }}
   >
     
@@ -401,7 +402,7 @@ export default function MyAccountPage() {
       alignItems: 'center',
       gap: '8px'
     }}
-    href="artworks"
+    href="catalog"
     className="nav-link"
   >
     <i className="fas fa-palette" style={{ fontSize: '20px' }}></i>
@@ -454,12 +455,7 @@ export default function MyAccountPage() {
         {/* Search Bar removed */}
   </div>
 
-        <div className="d-flex align-items-center gap-4">
-          {user && ['artist','admin'].includes(user.role) && (
-            <a onClick={() => router.push('/submit')} className="nav-link" style={{ cursor: 'pointer' }}>Submit Artwork</a>
-          )}
-
-        </div>
+        
 
         <div className="d-flex align-items-center gap-2">
           <button
@@ -692,20 +688,23 @@ export default function MyAccountPage() {
           borderBottom: '1px solid rgba(190, 161, 115, 0.08)',
           marginBottom: '34px',
           display: 'flex',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          position: 'relative',
+          zIndex: 2
         }}>
           {accountType === 'user' ? (
             <>
               <button 
                 className={`tab-button-account ${activeTab === 'user' ? 'active' : ''}`}
                 onClick={() => setActiveTab('user')}
+                style={{ pointerEvents: loading ? 'none' : 'auto' }}
               >
                 PROFILE
-              {/* MY FAVORITES tab removed */}
               </button>
               <button 
                 className={`tab-button-account ${activeTab === 'settings' ? 'active' : ''}`}
                 onClick={() => setActiveTab('settings')}
+                style={{ pointerEvents: loading ? 'none' : 'auto' }}
               >
                 SETTINGS
               </button>
@@ -715,12 +714,14 @@ export default function MyAccountPage() {
               <button 
                 className={`tab-button-account ${activeTab === 'artist' ? 'active' : ''}`}
                 onClick={() => setActiveTab('artist')}
+                style={{ pointerEvents: loading ? 'none' : 'auto' }}
               >
                 ARTIST PROFILE
               </button>
               <button 
                 className={`tab-button-account ${activeTab === 'settings' ? 'active' : ''}`}
                 onClick={() => setActiveTab('settings')}
+                style={{ pointerEvents: loading ? 'none' : 'auto' }}
               >
                 SETTINGS
               </button>
@@ -989,13 +990,22 @@ export default function MyAccountPage() {
                   </div>
                 </div>
               </div>
-              <Button 
-                className="bg-[#BEA173] text-[#001026] hover:bg-[#CBBD93] transition-colors duration-200" 
-                onClick={() => router.push('/submit')}
-                style={{ marginTop: '24px', fontWeight: 400, fontSize: '1rem', borderRadius: '10px', padding: '12px 32px' }}
-              >
-                Upload New Artwork
-              </Button>
+              <div style={{ display: 'flex', gap: '18px', marginTop: '24px' }}>
+                <Button 
+                  className="bg-[#BEA173] text-[#001026] hover:bg-[#CBBD93] transition-colors duration-200" 
+                  onClick={() => router.push('/submit')}
+                  style={{ fontWeight: 400, fontSize: '1rem', borderRadius: '10px', padding: '12px 32px' }}
+                >
+                  Upload New Artwork
+                </Button>
+                <Button
+                  className="bg-[#BEA173] text-[#001026] hover:bg-[#CBBD93] transition-colors duration-200"
+                  onClick={() => router.push('/mysubmissions')}
+                  style={{ fontWeight: 400, fontSize: '1rem', borderRadius: '10px', padding: '12px 32px' }}
+                >
+                  My Submissions
+                </Button>
+              </div>
             </div>
           )}
 
