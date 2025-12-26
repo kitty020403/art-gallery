@@ -344,90 +344,49 @@ export default function ArtistsPage() {
             <span style={{ display: 'inline-block' }}>My Account</span>
             
           </button>
+          
           <button
-            className="btn btn-hover-effect"
-            onClick={() => router.push('/signup')}
-            style={{
-              borderRadius: '12px',
-              padding: '8px 18px',
-              border: '1.5px solid #BEA173',
-              backgroundColor: 'transparent',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              fontWeight: '300',
-              color: '#BEA173',
-              fontSize: '18px',
-              letterSpacing: '0.5px',
-              cursor: 'pointer'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#cbbd93';
-              e.currentTarget.style.color = '#001026';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#BEA173';
-            }}
-          >
-            <span
+              className="btn btn-hover-effect"
+              onClick={handleLogout}
               style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '8px',
-                display: 'inline-flex',
+                borderRadius: '12px',
+                padding: '8px 18px',
+                border: '1.5px solid #BEA173',
+                backgroundColor: '#BEA173',
+                display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                background: 'transparent'
+                gap: '12px',
+                fontWeight: '400',
+                color: '#001026',
+                fontSize: '18px',
+                letterSpacing: '0.5px',
+                cursor: 'pointer',
+                marginLeft: user ? '0' : '12px'
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.backgroundColor = '#cbbd93';
+                e.currentTarget.style.color = '#001026';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#BEA173';
               }}
             >
-              <i className="fas fa-user-plus" style={{ color: '#BEA173', fontSize: '16px' }}></i>
-            </span>
-            <span style={{ display: 'inline-block' }}>Sign Up</span>
-            
-          </button>
-          <button
-            className="btn btn-hover-effect"
-            onClick={() => router.push('/login')}
-            style={{
-              borderRadius: '12px',
-              padding: '8px 18px',
-              border: '1.5px solid #BEA173',
-              backgroundColor: 'transparent',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              fontWeight: '300',
-              color: '#BEA173',
-              fontSize: '18px',
-              letterSpacing: '0.5px',
-              cursor: 'pointer'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#cbbd93';
-              e.currentTarget.style.color = '#001026';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#BEA173';
-            }}
-          >
-            <span
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '8px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: 'transparent'
-              }}
-            >
-              <i className="fas fa-sign-in-alt" style={{ color: '#BEA173', fontSize: '16px' }}></i>
-            </span>
-            <span style={{ display: 'inline-block' }}>login</span>
-            
-          </button>
+              <span
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '8px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'transparent'
+                }}
+              >
+                <i className="fas fa-sign-out-alt" style={{ color: '#001026', fontSize: '16px' }}></i>
+              </span>
+              <span style={{ display: 'inline-block' }}>Logout</span>
+            </button>
           
         </div>
       </nav>
