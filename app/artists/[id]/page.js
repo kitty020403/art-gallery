@@ -123,8 +123,25 @@ export default function ArtistDetailPage({ params }) {
         right: 0,
         zIndex: 1000
       }}>
-        <div onClick={() => router.push('/home')} style={{ fontSize: '2rem', fontFamily: "'Cormorant Garamond', serif", color: '#BEA173', cursor: 'pointer', fontWeight: '300', letterSpacing: '2px' }}>
-          galerium.
+        <div style={{ display: 'flex', alignItems: 'center', marginRight: '32px' }}>
+          <img
+            src="/images/logo.png"
+            alt="Galerium"
+            onClick={() => router.push('/home')}
+            style={{
+              height: '70px',
+              width: 'auto',
+              objectFit: 'contain',
+              filter: 'brightness(0) saturate(100%) invert(83%) sepia(12%) saturate(488%) hue-rotate(358deg) brightness(90%) contrast(90%)',
+              cursor: 'pointer',
+              transition: 'transform 0.3s ease',
+              display: 'block',
+              marginLeft: 0,
+              marginRight: 0
+            }}
+            onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
+            onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+          />
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem', flex: 1, justifyContent: 'center', marginLeft: '3rem' }}>
