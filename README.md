@@ -39,14 +39,12 @@ Pour mettre en place l'environnement de développement localement :
    Créez un fichier `.env.local` à la racine du projet. Ajoutez au minimum ces variables :
 
    ```ini
-   # Chaîne de connexion MongoDB
-   MONGODB_URI="votre-uri-mongodb"
+   # MongoDB connection string
+MONGODB_URI="mongodb+srv://linamrad02_db_user:6VgmBQdevLHtwd8v@cluster1.ow9rplb.mongodb.net/art-gallery"
+# JWT Secret Key 
 
-   # Clé secrète pour signer les JWT (essentiel pour la sécurité)
-   JWT_SECRET="une-cle-secrete-longue-et-complexe"
-
-   # Optionnel : port, environnement, etc.
-   ```
+JWT_SECRET="token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGJlOGFhOTk1MTIzMDAwMTU1MmM1ZmIiLCJpYXQiOjE3NTczMTk2MDd9.fMSc6NvgLFd8Dcj_W0apHywIST_9BIa3Zcw5NRy0YyY
+"`
 
    Nous avons choisi d'utiliser des JWT pour l'authentification, car cela permet une gestion sécurisée des sessions sans stocker d'état côté serveur.
 
