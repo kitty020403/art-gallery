@@ -208,7 +208,13 @@ Pour des raisons de bonnes pratiques de sécurité (que nous avons apprises dans
 1. Les variables d'environnement à copier dans `.env.local`
 2. Les comptes de test pour tester l'application :
    - Un compte utilisateur standard pour tester les fonctionnalités de base
-   - Un compte administrateur pour accéder aux fonctionnalités avancées (si implémentées)
+   (exemple: email:"malak.benjemaa@supcom.tn"
+             mot de passe:malak123
+   )
+   - Un compte administrateur pour accéder aux fonctionnalités avancées
+   (exemple: email:"admin@artgallery.com"
+             mot de passe:admin123
+   )
 
 ### Base de données
 
