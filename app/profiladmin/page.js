@@ -361,22 +361,6 @@ export default function AdminPanel() {
                       }}
                     />
                   </div>
-                  <div className="col-md-4">
-                    <input
-                      type="number"
-                      placeholder="Price"
-                      value={formData.price || ''}
-                      onChange={(e) => setFormData({...formData, price: e.target.value})}
-                      style={{
-                        width: '100%',
-                        padding: '10px',
-                        backgroundColor: 'rgba(0, 16, 38, 0.5)',
-                        border: '1px solid rgba(203, 189, 147, 0.3)',
-                        borderRadius: '5px',
-                        color: '#cbbd93'
-                      }}
-                    />
-                  </div>
                   <div className="col-12">
                     <input
                       type="text"

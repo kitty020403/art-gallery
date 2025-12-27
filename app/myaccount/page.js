@@ -451,9 +451,7 @@ export default function MyAccountPage() {
     About
   </a>
 
-
-        {/* Search Bar removed */}
-  </div>
+</div>
 
         
 

@@ -419,7 +419,6 @@ export default function CatalogPage() {
                       objectFit: 'cover',
                       display: 'block',
                       borderRadius: '8px',
-                      boxShadow: idx === 0 ? '0 0 0 2px #BEA173' : 'none', // highlight/fix first image
                       background: '#001026',
                     }}
                     onClick={e => {
