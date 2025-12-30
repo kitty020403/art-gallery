@@ -32,7 +32,7 @@ export default function LandingPage() {
       year: '2020',
       description: '"The white of the walls, the blue of the doors, the suspended flowers and the scent of jasmine in the wind."',
       image: '/images/6.jpg',
-      artistImage: '/images/iismail.png',
+      artistImage: '/images/la.png',
     },
     {
       id: 2,
@@ -295,6 +295,7 @@ export default function LandingPage() {
           color: '#fff',
           width: '400px'
         }}
+        
       />
       <i className="fas fa-search" style={{
         fontSize: '25px',
@@ -647,10 +648,16 @@ export default function LandingPage() {
                 const translateX = Math.sin((angle * Math.PI) / 180) * radius;
                 const translateZ = Math.cos((angle * Math.PI) / 180) * radius - radius;
                 const rotateY = -angle;
-                
+                const handleCardClick = () => {
+    if (isActive) {
+      const route = '/' + artwork.title.toLowerCase().replace(/\s+/g, '');
+      router.push(route);
+    }
+  };
                 return (
                   <div
                     key={`${artwork.id}-${position}`}
+                    onClick={handleCardClick} 
                     style={{
                       position: 'absolute',
                       transform: `
@@ -724,121 +731,125 @@ export default function LandingPage() {
               })}
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', zIndex: 50 }}>
-              <div
-                role="group"
-                aria-label="Active artist"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  background: 'rgba(255, 255, 255, 0.3)',
-                  border: '1px solid rgba(203,189,147,0.14)',
-                  padding: '12px 10px',
-                  borderRadius: '999px',
-                  minWidth: '450px',
-                  boxShadow: '0 8px 20px rgba(0,0,0,0.35)'
-                }}
-              >
-                <button
-                  aria-label="Previous"
-                  onClick={() => setCurrentSlide((c) => (c > 0 ? c - 1 : artworks.length - 1))}
-                  style={{
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: '50%',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: '(255,255,255,0.4)',
-                    border: '1px solid rgba(203,189,147,0.08)',
-                    color: '#cbbd93',
-                    cursor: 'pointer'
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(203,189,147,0.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'translateY(0)'; }}
-                >
-                  <i className="fas fa-chevron-left"></i>
-                </button>
-
-               <img
-  src={artworks[currentSlide].artistImage}
-  alt={artworks[currentSlide].artist}
+            {/* === FIXED CONTROLS CONTAINER === */}
+<div
+  role="group"
+  aria-label="Active artist"
   style={{
-    width: '60px',
-    height: '60px',
-    borderRadius: '50%',
-    objectFit: 'cover',
-    border: '2px solid rgba(255,255,255,0.06)'
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '16px',
+    background: 'rgba(255, 255, 255, 0.3)',
+    border: '1px solid rgba(203,189,147,0.14)',
+    padding: '14px 22px',
+    borderRadius: '999px',
+    width: '520px',       // <- largeur fixe réduite
+    minWidth: 'auto',     // <- pour ne pas contraindre minWidth
+    boxShadow: '0 8px 20px rgba(0,0,0,0.35)',
+    backdropFilter: 'blur(10px)',
+    margin: '0 auto',
   }}
-/>
+>
 
-               <div style={{ color: '#ffffff', textAlign: 'left' }}>
-  <div style={{ color: '#cbbd93', fontSize: '0.98rem', fontWeight: 600 }}>{artworks[currentSlide].artist}</div>
-  <div style={{ color: 'rgba(203,189,147,0.9)', fontSize: '0.9rem', marginTop: '2px' }}>{artworks[currentSlide].year} &nbsp; {artworks[currentSlide].title}</div>
+
+
+  {/* PREVIOUS */}
+  <button
+    aria-label="Previous"
+    onClick={() =>
+      setCurrentSlide((c) => (c > 0 ? c - 1 : artworks.length - 1))
+    }
+    style={{
+      width: '50px',
+      height: '50px',
+      borderRadius: '50%',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'transparent',
+      border: '1px solid rgba(203,189,147,0.2)',
+      color: '#cbbd93',
+      cursor: 'pointer',
+    }}
+  >
+    <i className="fas fa-chevron-left"></i>
+  </button>
+
+  {/* ARTIST IMAGE */}
+  <img
+    src={artworks[currentSlide].artistImage}
+    alt={artworks[currentSlide].artist}
+    style={{
+      width: '60px',
+      height: '60px',
+      borderRadius: '50%',
+      objectFit: 'cover',
+      border: '2px solid rgba(255,255,255,0.06)',
+    }}
+  />
+
+  {/* ARTIST INFO */}
+  <div style={{ color: '#ffffff', textAlign: 'left', flex: 1 }}>
+    <div style={{ color: '#cbbd93', fontSize: '0.98rem', fontWeight: 600 }}>
+      {artworks[currentSlide].artist}
+    </div>
+    <div style={{ color: 'rgba(203,189,147,0.9)', fontSize: '0.9rem' }}>
+      {artworks[currentSlide].year} &nbsp; {artworks[currentSlide].title}
+    </div>
+  </div>
+
+  {/* SEARCH */}
+  <button
+    aria-label="Search artist"
+    style={{
+      width: '36px',
+      height: '36px',
+      borderRadius: '50%',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'transparent',
+      border: '1px solid rgba(203,189,147,0.2)',
+      color: '#cbbd93',
+      cursor: 'pointer',
+    }}
+    onClick={() => {
+  const artistFirstName = artworks[currentSlide].artist.split(' ')[0].toLowerCase();
+  router.push(`/${artistFirstName}`);
+}}
+
+  >
+    <i className="fas fa-search"></i>
+  </button>
+
+  {/* NEXT */}
+  <button
+    aria-label="Next"
+    onClick={() =>
+      setCurrentSlide((c) => (c < artworks.length - 1 ? c + 1 : 0))
+    }
+    style={{
+      width: '50px',
+      height: '50px',
+      borderRadius: '50%',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'transparent',
+      border: '1px solid rgba(203,189,147,0.2)',
+      color: '#cbbd93',
+      cursor: 'pointer',
+    }}
+  >
+    <i className="fas fa-chevron-right"></i>
+  </button>
+
 </div>
 
-                <button
-                  aria-label="Search artist"
-                  title="Search"
-                  onClick={() => alert('Search artist')}
-                  style={{
-                    marginLeft: '6px',
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: 'transparent',
-                    border: '1px solid rgba(203,189,147,0.08)',
-                    color: '#cbbd93',
-                    cursor: 'pointer'
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(203,189,147,0.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'translateY(0)'; }}
-                >
-                  <i className="fas fa-search"></i>
-                </button>
-
-                <button
-                  aria-label="Next"
-                  onClick={() => setCurrentSlide((c) => (c < artworks.length - 1 ? c + 1 : 0))}
-                  style={{
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: '50%',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: 'transparent',
-                    border: '1px solid rgba(203,189,147,0.08)',
-                    color: '#cbbd93',
-                    cursor: 'pointer'
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(203,189,147,0.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'translateY(0)'; }}
-                >
-                  <i className="fas fa-chevron-right"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      {/* Gradient Overlay */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'linear-gradient(to bottom, rgba(203, 189, 147, 0.15) 0%, rgba(0, 16, 38, 1) 100%)',
-        pointerEvents: 'none',
-        zIndex: -1
-      }}></div>
-
+</div>   {/* END position-relative container */}
+</div>   {/* END Gallery Section */}
+</main>  {/* END Main Content */}
 
 
 
